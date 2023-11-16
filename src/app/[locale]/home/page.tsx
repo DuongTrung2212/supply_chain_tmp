@@ -321,7 +321,7 @@ export default function HomePage() {
                   {dataTopSelling.length > 1 && (
                     <div className="w-1/2">
                       <LeaderBoard
-                        skip={dataTopSelling.length / 2}
+                        skip={Math.floor(dataTopSelling.length / 2)}
                         listTopSelling={dataTopSelling.slice(
                           dataTopSelling.length / 2,
                           dataTopSelling.length
