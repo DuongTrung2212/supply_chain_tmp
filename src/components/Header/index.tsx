@@ -71,12 +71,14 @@ import moment from 'moment';
 import 'moment/locale/vi';
 import currency from '@/services/currency';
 import CartItem from './CartItem';
+import { CheckoutForm } from '../Contents/common/CheckoutForm';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default memo(function Header() {
   // const [user, setUser] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [valueRadioCart, setValueRadioCart] = useState(0);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showSearchItems, setShowSearchItems] = useState(false);
@@ -109,7 +111,7 @@ export default memo(function Header() {
   moment.locale(locale);
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value);
+    // console.log('radio checked', e.target.value);
     setValueRadioCart(e.target.value);
   };
 
@@ -628,14 +630,31 @@ export default memo(function Header() {
                       </p>
                     </div>
                   </div>
+                  {/* Button Checkout */}
                   <div className="w-full">
                     <button
                       // disabled
-                      onClick={fetchBuyCartItem}
+                      // onClick={fetchBuyCartItem}
+                      onClick={() => setShowCheckoutModal(true)}
                       className="relative disabled:bg-gray-100 disabled:text-gray-300 block m-auto py-2 px-8 text-black text-base font-bold bg-green-100 rounded-xl overflow-hidden transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0"
                     >
                       Buy now
                     </button>
+                    <Modal
+                      open={showCheckoutModal}
+                      onCancel={() => setShowCheckoutModal(false)}
+                      footer={[]}
+                    >
+                      <CheckoutForm
+                        buyQuantity={listCart[valueRadioCart]?.quantity || 0}
+                        producId={listCart[valueRadioCart]?.product?.id || ''}
+                        price={listCart[valueRadioCart]?.product?.price || 0}
+                        quantity={
+                          listCart[valueRadioCart]?.product?.quantity || 0
+                        }
+                        cartId={listCart[valueRadioCart]?.id}
+                      />
+                    </Modal>
                   </div>
                 </div>
               </div>

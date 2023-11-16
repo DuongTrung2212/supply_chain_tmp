@@ -6,10 +6,16 @@ import {
   EyeOutlined,
   FieldTimeOutlined,
   MailOutlined,
+  MinusCircleOutlined,
+  MinusSquareFilled,
+  MinusSquareOutlined,
   PhoneOutlined,
   PicLeftOutlined,
+  PlusCircleOutlined,
   PlusCircleTwoTone,
   PlusOutlined,
+  PlusSquareFilled,
+  PlusSquareOutlined,
   SearchOutlined,
   SendOutlined,
   ShoppingCartOutlined,
@@ -25,6 +31,7 @@ import {
   Form,
   Image,
   Input,
+  InputNumber,
   List,
   Modal,
   Popconfirm,
@@ -113,6 +120,7 @@ export default function MarketInfo({
   const [dataListTransaction, setDataListTransaction] = useState<
     TransactionType[]
   >([]);
+  const [buyQuantity, setBuyQuantity] = useState(0);
   const [loadingPage, setLoadingPage] = useState(true);
   const [changePageRight, setChangePageRight] = useState('COMMENT');
   const [generalAndProvider, setGeneralAndProvider] = useState('GENERAL');
@@ -224,8 +232,8 @@ export default function MarketInfo({
     await instanceAxios
       .post(`cart/create`, {
         product_id: dataProduct.id,
-        quantity: dataProduct.quantity,
-        price: dataProduct.price,
+        quantity: buyQuantity || 1,
+        price: buyQuantity * (dataProduct.price || 0) || dataProduct.price,
       })
       .then((res) => {
         mutate('cart/list');
@@ -401,7 +409,7 @@ export default function MarketInfo({
                   </Link>
                 </div>
                 <p className="text-[27px]  font-[Work Sans] font-[600]">
-                  {`${dataProduct.price} ${currency}`}
+                  {`${dataProduct.price || 0} ${currency}`}
                 </p>
                 <div className="flex items-center space-x-2 font-medium text-gray-600">
                   <p>{`Sản phẩm hiện còn:`}</p>
@@ -426,8 +434,49 @@ export default function MarketInfo({
                     </div>
                   ))}
                 </div> */}
-                <div className="rounded w-full p-[20px]">
-                  <div className="flex  w-full items-center mt-[10px]">
+                <div className="rounded select-none	 w-full p-[20px]">
+                  <div className="flex items-center space-x-10">
+                    <Space>
+                      <MinusCircleOutlined
+                        onClick={() =>
+                          setBuyQuantity(buyQuantity <= 0 ? 0 : buyQuantity - 1)
+                        }
+                        className="text-[20px] text-blue-700"
+                      />
+                      {/* <MinusSquareOutlined  /> */}
+                      <InputNumber
+                        className="w-[150px]"
+                        addonBefore={'Số lượng'}
+                        defaultValue={dataProduct.quantity ? buyQuantity : 0}
+                        value={dataProduct.quantity ? buyQuantity : 0}
+                        onChange={(e) => setBuyQuantity(e || 0)}
+                        // addonAfter={<div onClick={(e) => alert('OK')}>Max</div>}
+                        min={0}
+                        max={dataProduct.quantity}
+                      />
+                      <PlusCircleOutlined
+                        onClick={() => {
+                          if (dataProduct.quantity) {
+                            setBuyQuantity(
+                              dataProduct.quantity === buyQuantity
+                                ? dataProduct.quantity
+                                : buyQuantity + 1
+                            );
+                          } else {
+                            notification.error({
+                              message: 'Sản phẩm hiện không còn!!!',
+                            });
+                          }
+                        }}
+                        className="text-[20px] text-blue-700"
+                      />
+                    </Space>
+                    <p>
+                      Tổng phí là: {buyQuantity * (dataProduct.price || 0)}{' '}
+                      {currency}
+                    </p>
+                  </div>
+                  <div className="flex w-full items-center mt-[10px]">
                     <div className="w-1/2 text-[16px] flex items-center rounded-xl overflow-hidden space-x-[1px]">
                       <div
                         onClick={() => login(() => setShowModalPay(true))}
@@ -436,7 +485,15 @@ export default function MarketInfo({
                         Mua ngay
                       </div>
                       <div
-                        onClick={() => login(() => fetchAddCartItem())}
+                        onClick={() =>
+                          login(() => {
+                            buyQuantity
+                              ? fetchAddCartItem()
+                              : notification.error({
+                                  message: 'Vui lòng chọn số lượng',
+                                });
+                          })
+                        }
                         className="w-1/5 text-center bg-[#2081E1] py-[12px]"
                       >
                         <FontAwesomeIcon
@@ -455,6 +512,7 @@ export default function MarketInfo({
                       producId={dataProduct?.id || ''}
                       price={dataProduct.price || 0}
                       quantity={dataProduct.quantity || 0}
+                      buyQuantity={buyQuantity}
                       onSuccess={() => setShowModalPay(false)}
                     />
                   </Modal>

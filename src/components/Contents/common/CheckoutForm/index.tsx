@@ -12,71 +12,66 @@ import {
   notification,
 } from 'antd';
 import { CompoundedComponent } from 'antd/es/float-button/interface';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
+import { useEffectOnce } from 'usehooks-ts';
 
 export const CheckoutForm = ({
   form = {},
   producId,
   price,
   quantity,
+  buyQuantity = 0,
+  cartId,
   onSuccess,
 }: {
   form?: FormProps;
   producId: string;
+  cartId?: string;
+  buyQuantity: number;
   price: number;
   quantity: number;
   onSuccess?: () => void;
 }) => {
-  const [priceTotal, setPriceTotal] = useState(price);
+  const [priceTotal, setPriceTotal] = useState(buyQuantity * price);
+  const [valueQuantity, setValueQuantity] = useState(buyQuantity);
   const [loading, setLoading] = useState(false);
-  const [orderType, setOrderType] = useState<'CART' | 'BUY'>('BUY');
+  // const [orderType, setOrderType] = useState<'CART' | 'BUY'>('BUY');
   const currentUser = useAppSelector((state) => state.user.user);
   const [useForm] = Form.useForm();
+  const { mutate } = useSWRConfig();
+
+  useEffect(() => {
+    setPriceTotal(buyQuantity * price);
+    setValueQuantity(buyQuantity);
+  }, [buyQuantity, price]);
 
   const onFinish = async (e: any) => {
     setLoading(true);
-    if (orderType === 'BUY')
-      await instanceAxios
-        .put(
-          `product/${producId}/purchase?price=${priceTotal}&quantity=${e.quantity}`
-        )
-        .then((res) => {
-          notification.success({
-            message: 'Mua hàng thành công',
-            description: 'Bạn có thể xem lại đơn hàng ở trang thông tin',
-          });
-          onSuccess?.();
-          useForm.resetFields();
-        })
-        .catch((err) => {
-          notification.error({
-            message: 'Mua hàng thất bại',
-            description: 'Bạn có thể vui lòng xem lại thông tin',
-          });
-        })
-        .finally(() => setLoading(false));
-    else
-      await instanceAxios
-        .post(`cart/create`, {
-          product_id: producId,
-          ...e,
-          price: priceTotal,
-        })
-        .then((res) => {
-          notification.success({
-            message: 'Thành công',
-            description: 'Đã thêm vào giỏ hàng',
-          });
-          onSuccess?.();
-          useForm.resetFields();
-        })
-        .catch((err) => {
-          notification.error({
-            message: 'Thất bại',
-            description: 'Thêm giỏ hàng thất bại',
-          });
-        })
-        .finally(() => setLoading(false));
+    // console.log(e);
+    await instanceAxios
+      .put(
+        `product/${producId}/purchase?price=${priceTotal}&quantity=${valueQuantity}${
+          cartId ? `&cart_id=${cartId}` : ``
+        }`
+      )
+      .then((res) => {
+        notification.success({
+          message: 'Mua hàng thành công',
+          description: 'Bạn có thể xem lại đơn hàng ở trang thông tin',
+        });
+        onSuccess?.();
+        cartId && mutate('cart/list');
+
+        useForm.resetFields();
+      })
+      .catch((err) => {
+        notification.error({
+          message: 'Mua hàng thất bại',
+          description: 'Bạn có thể vui lòng xem lại thông tin',
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -91,26 +86,23 @@ export const CheckoutForm = ({
       <Typography.Title className="text-center" level={3}>
         Mua hàng
       </Typography.Title>
-      <Form.Item
-        label="Số lượng bạn muốn mua"
-        name={'quantity'}
-        initialValue={1}
-        rules={[
-          {
-            required: true,
-            message: 'Please choose your product quantity',
-          },
-        ]}
-      >
+      <Form.Item initialValue={valueQuantity} label="Số lượng bán">
         <InputNumber
           addonBefore={'Số lượng'}
-          onChange={(e) => setPriceTotal(Number(e) * price)}
-          // addonAfter={<div onClick={(e) => alert('OK')}>Max</div>}
-          min={1}
+          onChange={(e) => {
+            setPriceTotal((e || 0) * price);
+            setValueQuantity(e || 0);
+          }}
+          value={valueQuantity}
+          min={0}
           max={quantity}
+          // formatter={(value) =>
+          //   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+          // }
+          // disabled
         />
       </Form.Item>
-      <Form.Item label="Tổng giá trị">
+      <Form.Item initialValue={priceTotal} label="Tổng giá trị">
         <ConfigProvider
           theme={{
             components: {
@@ -200,7 +192,7 @@ export const CheckoutForm = ({
             </span>
           </button> */}
           <button
-            onClick={() => setOrderType('BUY')}
+            // onClick={() => setOrderType('BUY')}
             className="rounded-lg font-semibold transition relative text-white w-36 h-10 overflow-hidden cursor-pointer text-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500"
             disabled={!!!quantity || loading}
             type="submit"
