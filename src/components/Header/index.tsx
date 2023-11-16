@@ -653,6 +653,9 @@ export default memo(function Header() {
                           listCart[valueRadioCart]?.product?.quantity || 0
                         }
                         cartId={listCart[valueRadioCart]?.id}
+                        onSuccess={() => {
+                          mutate(`marketplace/id`);
+                        }}
                       />
                     </Modal>
                   </div>

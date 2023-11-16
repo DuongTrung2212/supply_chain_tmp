@@ -250,9 +250,11 @@ export default function MarketInfo({
       });
     // .finally(() => setLoading(false));
   };
-  useEffectOnce(() => {
-    fethMarket();
-  });
+  // useEffectOnce(() => {
+  //   fethMarket();
+  // });
+  useSWR(`marketplace/id`, fethMarket);
+
   const fetchDataComment = async () => {
     await instanceAxios
       .get(
@@ -421,7 +423,8 @@ export default function MarketInfo({
               $ {dataProduct.price?.toLocaleString()}
             </p> */}
                 <div className="text-[16px] leading-10 font-[Nunito] text-[#707070] text-justify">
-                  {dataProduct.description}
+                  {dataProduct.description &&
+                    'Chủ sản phẩm vẫn chưa thêm mô tả gì?????'}
                 </div>
                 {/* <div className="flex gap-x-4 my-[20px]">
                   {[...Array(4)].map((_, index) => (
@@ -513,7 +516,10 @@ export default function MarketInfo({
                       price={dataProduct.price || 0}
                       quantity={dataProduct.quantity || 0}
                       buyQuantity={buyQuantity}
-                      onSuccess={() => setShowModalPay(false)}
+                      onSuccess={() => {
+                        setShowModalPay(false);
+                        mutate(`marketplace/id`);
+                      }}
                     />
                   </Modal>
                 </div>
@@ -624,7 +630,7 @@ export default function MarketInfo({
                 </div>
                 <div className="w-full  flex">
                   {/* Giới thiệu sản  phẩm */}
-                  <div className="mt-[50px] mr-[20px] h-fit w-1/2 rounded-xl overflow-hidden border-[1px] border-gray-300 ">
+                  {/* <div className="mt-[50px] mr-[20px] h-fit w-1/2 rounded-xl overflow-hidden border-[1px] border-gray-300 ">
                     <div className="flex gap-x-5 p-[20px] text-[16px] font-bold border-b-[1px] border-gray-300 ">
                       <PicLeftOutlined />
                       Giới thiệu về sản phẩm
@@ -637,7 +643,7 @@ export default function MarketInfo({
                       {dataProduct.description ||
                         'Chủ sản phẩm chưa thêm thông tin!!!'}
                     </p>
-                  </div>
+                  </div> */}
                   <div className="w-1/2 p-[20px]  rounded-xl mt-[50px] pl-[50px] border-[1px] border-gray-300">
                     <Segmented
                       size={'large'}
