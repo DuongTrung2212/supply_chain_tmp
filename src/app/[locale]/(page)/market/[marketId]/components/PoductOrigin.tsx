@@ -27,33 +27,7 @@ interface Props {
       email?: string;
     };
   };
-  transactions?: {
-    id?: string;
-    product_id?: string;
-    user_id?: string;
-    price?: number;
-    quantity?: number;
-    created_at?: string;
-    updated_at?: string;
-    product?: {
-      id?: string;
-      product_type?: string;
-      product_status?: string;
-      name?: string;
-      description?: string;
-      price?: number;
-      quantity?: number;
-      banner?: number;
-      created_by?: number;
-      created_at?: number;
-      user?: {
-        id?: string;
-        avatar?: string;
-        username?: string;
-        email?: string;
-      };
-    };
-  };
+  transactions?: DetailHistoryType;
 }
 
 export default function ProductOrigin(props: Props) {

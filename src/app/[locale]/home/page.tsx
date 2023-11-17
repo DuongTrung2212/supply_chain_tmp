@@ -229,9 +229,9 @@ export default function HomePage() {
       ) : (
         <>
           <Header />
-          <div className="w-full flex-col items-center  bg-gradient-to-b from-black">
+          <div className="w-full flex-col items-center bg-[url('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2022/05/22/16532399004541.jpg')]">
             <div className="w-full flex flex-col">
-              <div className="w-1/3 h-[450px] text-white flex items-center ">
+              <div className="w-1/3 h-[300px] text-white flex items-center ">
                 <div className="text-[32px] px-[20px]">
                   <p className="font-[600]">Collections. Next Level.</p>
                   <p className="text-[16px] text-[#b3b3b3]">
@@ -251,13 +251,13 @@ export default function HomePage() {
                 {listMarket.map((item, index) => (
                   <div
                     key={index}
-                    className="relative rounded-2xl overflow-hidden w-[230px] mx-[20px] transition ease-in-out hover:-translate-y-1 hover:scale-105 duration-300"
+                    className="relative rounded-2xl overflow-hidden w-[230px] mx-[20px] "
                   >
                     <Image
                       width={230}
                       height={230}
                       preview={false}
-                      className="rounded-2xl object-cover"
+                      className="rounded-2xl object-cover transition ease-in-out hover:-translate-y-1 hover:scale-105 duration-500"
                       alt=""
                       src={item.product?.banner}
                     />

@@ -17,6 +17,7 @@ import user_factory from '../public/cms/user_factory.png';
 import user_farmer from '../public/cms/user_farmer.png';
 import user_seed from '../public/cms/user_seed.png';
 import register_rule from '../public/register_rule.png';
+
 // import factory from '../public/cms/factory.png';
 // import factory from '../public/cms/factory.png';
 // import factory from '../public/cms/factory.png';

@@ -3,6 +3,7 @@ import staticVariables from '@/static';
 import {
   DeleteTwoTone,
   EditTwoTone,
+  EllipsisOutlined,
   EyeOutlined,
   FieldTimeOutlined,
   MailOutlined,
@@ -18,6 +19,7 @@ import {
   PlusSquareOutlined,
   SearchOutlined,
   SendOutlined,
+  ShareAltOutlined,
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import {
@@ -101,6 +103,7 @@ import ProductOrigin from './components/PoductOrigin';
 import currency from '@/services/currency';
 import Description from '@/components/Contents/ProductInfo/Description';
 import useLogin from '@/services/requireLogin';
+import ChainItem from './components/ChainItem';
 
 export default function MarketInfo({
   params,
@@ -111,7 +114,7 @@ export default function MarketInfo({
   const [openCreateDescriptionModal, setOpenCreateDescriptionModal] =
     useState(false);
   const [openGrowUpModal, setOpenGrowUpModal] = useState(false);
-  const [dataMarket, setDataMarket] = useState<any>({});
+  const [dataMarket, setDataMarket] = useState<MarketType>({});
   const [dataOwner, setDataOwner] = useState<UserType>({});
   const [dataProduct, setDataProduct] = useState<ProductType>({});
   const [dataHistory, setDataHistory] = useState<HistoryType>({});
@@ -149,7 +152,7 @@ export default function MarketInfo({
         position: 'bottom' as const,
       },
       title: {
-        display: true,
+        display: false,
         text: 'Thống kê hoạt động của sản phẩm vừa qua',
       },
     },
@@ -382,19 +385,25 @@ export default function MarketInfo({
         <>
           <div className="px-[50px]">
             <div className="relative flex justify-between gap-x-10">
-              <Image
-                className="object-cover rounded-2xl drop-shadow-[0_10px_10px_rgba(0,0,0,0.25)]"
-                alt=""
-                width={800}
-                preview={false}
-                height={500}
-                src={dataProduct.banner}
-              />
-              <div className="w-1/2 top-4/12 left-[98%] rounded">
-                <p className="text-[30px] text-[#222222] font-semibold font-[Work Sans]">
-                  {dataProduct.name}
-                </p>
-                <div className="flex gap-x-2 tetx-[16px] text-[#7B7B7B] font-light">
+              <div className="w-1/2">
+                <Image
+                  className="object-cover rounded-2xl drop-shadow-[0_10px_10px_rgba(0,0,0,0.25)]"
+                  alt=""
+                  width={'100%'}
+                  preview={false}
+                  height={'100%'}
+                  src={dataProduct.banner}
+                />
+              </div>
+              <div className="w-1/2 top-4/12 rounded">
+                <div className="w-full flex justify-between text-[30px] text-[#222222] font-semibold font-[Work Sans]">
+                  <p>{dataProduct.name}</p>
+                  <div className="text-[20px] mr-[20px] space-x-8">
+                    <ShareAltOutlined />
+                    <EllipsisOutlined />
+                  </div>
+                </div>
+                <div className="flex w-full gap-x-2 tetx-[16px] text-[#7B7B7B] font-light">
                   Sản phẩm của
                   <Link
                     className="flex space-x-2 items-center"
@@ -410,22 +419,15 @@ export default function MarketInfo({
                     />
                   </Link>
                 </div>
-                <p className="text-[27px]  font-[Work Sans] font-[600]">
-                  {`${dataProduct.price || 0} ${currency}`}
-                </p>
-                <div className="flex items-center space-x-2 font-medium text-gray-600">
-                  <p>{`Sản phẩm hiện còn:`}</p>
-                  <p className="font-bold  text-[20px]">
-                    {dataProduct.quantity || 0}
-                  </p>
-                </div>
-                {/* <p className="text-[27px] text-[#2DB457] font-[Work Sans] font-[600]">
-              $ {dataProduct.price?.toLocaleString()}
-            </p> */}
-                <div className="text-[16px] leading-10 font-[Nunito] text-[#707070] text-justify">
+                <div className="text-[16px] leading-10 text-[#5f5e5e] text-justify">
                   {dataProduct.description &&
                     'Chủ sản phẩm vẫn chưa thêm mô tả gì?????'}
                 </div>
+
+                {/* <p className="text-[27px] text-[#2DB457] font-[Work Sans] font-[600]">
+              $ {dataProduct.price?.toLocaleString()}
+            </p> */}
+
                 {/* <div className="flex gap-x-4 my-[20px]">
                   {[...Array(4)].map((_, index) => (
                     <div
@@ -437,96 +439,119 @@ export default function MarketInfo({
                     </div>
                   ))}
                 </div> */}
-                <div className="rounded select-none	 w-full p-[20px]">
-                  <div className="flex items-center space-x-10">
-                    <Space>
-                      <MinusCircleOutlined
-                        onClick={() =>
-                          setBuyQuantity(buyQuantity <= 0 ? 0 : buyQuantity - 1)
-                        }
-                        className="text-[20px] text-blue-700"
-                      />
-                      {/* <MinusSquareOutlined  /> */}
-                      <InputNumber
-                        className="w-[150px]"
-                        addonBefore={'Số lượng'}
-                        defaultValue={dataProduct.quantity ? buyQuantity : 0}
-                        value={dataProduct.quantity ? buyQuantity : 0}
-                        onChange={(e) => setBuyQuantity(e || 0)}
-                        // addonAfter={<div onClick={(e) => alert('OK')}>Max</div>}
-                        min={0}
-                        max={dataProduct.quantity}
-                      />
-                      <PlusCircleOutlined
-                        onClick={() => {
-                          if (dataProduct.quantity) {
-                            setBuyQuantity(
-                              dataProduct.quantity === buyQuantity
-                                ? dataProduct.quantity
-                                : buyQuantity + 1
-                            );
-                          } else {
-                            notification.error({
-                              message: 'Sản phẩm hiện không còn!!!',
-                            });
-                          }
-                        }}
-                        className="text-[20px] text-blue-700"
-                      />
-                    </Space>
-                    <p>
-                      Tổng phí là: {buyQuantity * (dataProduct.price || 0)}{' '}
-                      {currency}
+                <div className="select-none	rounded-xl w-full mt-[20px] border-[1px] border-gray-300">
+                  <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
+                    <FieldTimeOutlined className="text-[20px]" />
+                    <p className="text-[16px] tracking-wider">
+                      Ngày đăng bán:{' '}
+                      {moment(dataMarket.created_at).format('LLL')}
                     </p>
                   </div>
-                  <div className="flex w-full items-center mt-[10px]">
-                    <div className="w-1/2 text-[16px] flex items-center rounded-xl overflow-hidden space-x-[1px]">
-                      <div
-                        onClick={() => login(() => setShowModalPay(true))}
-                        className="w-4/5 text-center bg-[#2081E1] py-[12px] text-md leading-md font-semibold text-white"
-                      >
-                        Mua ngay
-                      </div>
-                      <div
-                        onClick={() =>
-                          login(() => {
-                            buyQuantity
-                              ? fetchAddCartItem()
-                              : notification.error({
-                                  message: 'Vui lòng chọn số lượng',
-                                });
-                          })
-                        }
-                        className="w-1/5 text-center bg-[#2081E1] py-[12px]"
-                      >
-                        <FontAwesomeIcon
-                          style={{ color: '#ffffff' }}
-                          icon={faCartShopping}
+                  <div className="p-[20px]">
+                    <div>
+                      <p>Giá sản phẩm</p>
+                      <p className="text-[30px] tracking-widest	  font-[600]">
+                        {`${dataProduct.price || 0} ${currency}`}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2 py-[10px] font-medium text-gray-600">
+                      <p>{`Sản phẩm hiện còn:`}</p>
+                      <p className="font-bold  text-[20px]">
+                        {dataProduct.quantity || 0}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-10">
+                      <Space>
+                        <MinusCircleOutlined
+                          onClick={() =>
+                            setBuyQuantity(
+                              buyQuantity <= 0 ? 0 : buyQuantity - 1
+                            )
+                          }
+                          className="text-[20px] text-blue-700"
                         />
+                        {/* <MinusSquareOutlined  /> */}
+                        <InputNumber
+                          className="w-[150px]"
+                          addonBefore={'Số lượng'}
+                          defaultValue={dataProduct.quantity ? buyQuantity : 0}
+                          value={dataProduct.quantity ? buyQuantity : 0}
+                          onChange={(e) => setBuyQuantity(e || 0)}
+                          // addonAfter={<div onClick={(e) => alert('OK')}>Max</div>}
+                          min={0}
+                          max={dataProduct.quantity}
+                        />
+                        <PlusCircleOutlined
+                          onClick={() => {
+                            if (dataProduct.quantity) {
+                              setBuyQuantity(
+                                dataProduct.quantity === buyQuantity
+                                  ? dataProduct.quantity
+                                  : buyQuantity + 1
+                              );
+                            } else {
+                              notification.error({
+                                message: 'Sản phẩm hiện không còn!!!',
+                              });
+                            }
+                          }}
+                          className="text-[20px] text-blue-700"
+                        />
+                      </Space>
+                      <p>
+                        Tổng phí là: {buyQuantity * (dataProduct.price || 0)}{' '}
+                        {currency}
+                      </p>
+                    </div>
+                    <div className="flex w-full items-center mt-[10px]">
+                      <div className="w-2/3 text-[16px] flex items-center rounded-xl overflow-hidden space-x-[1px]">
+                        <div
+                          onClick={() => login(() => setShowModalPay(true))}
+                          className="w-4/5 text-center bg-[#2081E1] py-[12px] text-md leading-md font-semibold text-white"
+                        >
+                          Mua ngay
+                        </div>
+                        <div
+                          onClick={() =>
+                            login(() => {
+                              buyQuantity
+                                ? fetchAddCartItem()
+                                : notification.error({
+                                    message: 'Vui lòng chọn số lượng',
+                                  });
+                            })
+                          }
+                          className="w-1/5 text-center bg-[#2081E1] py-[12px]"
+                        >
+                          <FontAwesomeIcon
+                            style={{ color: '#ffffff' }}
+                            icon={faCartShopping}
+                          />
+                        </div>
                       </div>
                     </div>
+                    <Modal
+                      onCancel={() => setShowModalPay(false)}
+                      open={showModalPay}
+                      footer={[]}
+                    >
+                      <CheckoutForm
+                        producId={dataProduct?.id || ''}
+                        price={dataProduct.price || 0}
+                        quantity={dataProduct.quantity || 0}
+                        buyQuantity={buyQuantity}
+                        onSuccess={() => {
+                          setShowModalPay(false);
+                          mutate(`marketplace/id`);
+                        }}
+                      />
+                    </Modal>
                   </div>
-                  <Modal
-                    onCancel={() => setShowModalPay(false)}
-                    open={showModalPay}
-                    footer={[]}
-                  >
-                    <CheckoutForm
-                      producId={dataProduct?.id || ''}
-                      price={dataProduct.price || 0}
-                      quantity={dataProduct.quantity || 0}
-                      buyQuantity={buyQuantity}
-                      onSuccess={() => {
-                        setShowModalPay(false);
-                        mutate(`marketplace/id`);
-                      }}
-                    />
-                  </Modal>
                 </div>
               </div>
             </div>
 
-            <Segmented
+            {/* <Segmented
               size={'large'}
               className={'mt-[50px]'}
               options={[
@@ -534,49 +559,23 @@ export default function MarketInfo({
                 { label: 'Nhà cung cấp', value: 'PROVIDER' },
               ]}
               onChange={(e) => setGeneralAndProvider(e as string)}
-            />
+            /> */}
             {generalAndProvider === 'GENERAL' ? (
               <>
-                <div className="w-full flex mt-[20px] ">
-                  <div className="w-1/2 pt-[10px]">
-                    <div className="w-full flex space-x-10">
-                      {/* Giới thiệu chủ sử hữu */}
-                      <div className=" w-1/2 rounded-xl overflow-hidden border-[1px] border-gray-300">
+                <div className="w-full flex mt-[30px] gap-x-10 ">
+                  {/* <div className="w-1/2 pt-[10px]"> */}
+                  {/* <div className="w-full flex space-x-10"> */}
+                  {/* Giới thiệu chủ sử hữu */}
+                  {/* <div className=" w-1/2 rounded-xl overflow-hidden border-[1px] border-gray-300">
                         <div className="py-[15px] text-center font-bold border-b-[1px] border-gray-300 ">
                           Chủ sở hữu
                         </div>
                         <div className="p-[20px] flex flex-col space-y-10 items-center">
                           <Owner {...dataOwner} />
-                          {/* <Link href={`/user/${dataProduct.created_by}`}>
-                  <div className="flex items-center p-[20px] rounded-xl flex-col bg-[#1212120A] hover:bg-[#ececec]">
-                    <Avatar size={100} src={dataProduct.user?.avatar} />
-                    <p className="text-2xl font-bold text-[#222222]">
-                      {dataProduct.user?.username}
-                    </p>
-                  </div>
-                </Link> */}
-                          {/* <div className="flex w-2/3 h-fit flex-col border-[1px] border-current-color rounded-xl overflow-hidden ">
-                    <p className="text-center text-white bg-current-color p-[5px]">
-                      Liên hệ
-                    </p>
-                    <div className="w-full px-[10px]">
-                      <Paragraph className=" border-t-0 p-[5px]" copyable>
-                        {dataProduct.user?.email}
-                      </Paragraph>
-                      {dataProduct.user?.phone && (
-                        <Paragraph
-                          className="border-current-color border-[1px] border-t-0 p-[5px]"
-                          copyable
-                        >
-                          {dataProduct.user?.phone}
-                        </Paragraph>
-                      )}
-                    </div>
-                  </div> */}
                         </div>
-                      </div>
-                      {/* Thông tin sản phẩm */}
-                      <div className="flex-col w-1/2 rounded-xl border-[1px] border-gray-300 overflow-auto">
+                      </div> */}
+                  {/* Thông tin sản phẩm */}
+                  {/* <div className="flex-col w-1/2 rounded-xl border-[1px] border-gray-300 overflow-auto">
                         <div className="py-[15px] text-center font-bold border-b-[1px] border-gray-300  ">
                           Thông tin sản phẩm
                         </div>
@@ -591,100 +590,141 @@ export default function MarketInfo({
                             </div>
                           ))}
                         </div>
-                      </div>
+                      </div> */}
+                  {/* </div> */}
+                  {/* </div> */}
+                  <div className="w-1/2  rounded-xl overflow-hidden border-[1px] border-gray-300">
+                    <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
+                      <FieldTimeOutlined className="text-[20px]" />
+                      <p className="text-[16px] font-semibold tracking-wider">
+                        Thống kê hoạt động của sản phẩm vừa qua
+                      </p>
+                    </div>
+                    <div className="relative pt-[20px] px-[50px]">
+                      <Line
+                        // className="mt-[100px]"
+                        options={options}
+                        data={dataChartProps}
+                      />
+                      <p className="absolute font-semibold -rotate-90 left-0 top-1/2 -translate-y-1/2">
+                        Số lượng
+                      </p>
                     </div>
                   </div>
-                  <div className="w-1/2 pl-[50px] rounded overflow-hidden">
-                    {/* <QRCode
-              className="m-auto"
-              type="canvas"
-              value="https://www.facebook.com/"
-            /> */}
-                    <Line
-                      // className="mt-[100px]"
-                      options={options}
-                      data={dataChartProps}
+                  <div className="w-1/2 border-[1px] rounded-xl border-gray-300">
+                    <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
+                      <FieldTimeOutlined className="text-[20px]" />
+                      <p className="text-[16px] font-semibold tracking-wider">
+                        Offers
+                      </p>
+                    </div>
+                    <Row className="px-[10px] py-[15px] border-[1px] border-b-0">
+                      <Col span={2}></Col>
+                      <Col span={4}>
+                        <p>Vai trò</p>
+                      </Col>
+                      <Col span={4}>
+                        <p>Tên</p>
+                      </Col>
+                      <Col span={4}>
+                        <p>Email</p>
+                      </Col>
+                      <Col span={6}>
+                        <p>Địa chỉ ví</p>
+                      </Col>
+                    </Row>
+                    <ChainItem
+                      role="Chủ sở hữu"
+                      data={dataHistory as DetailHistoryType}
                     />
-                    {/* <div className="mx-auto rounded-2xl overflow-hidden my-[50px] w-2/3">
-              <Carousel
-                className="drop-shadow-[0_20px_20px_rgba(0,0,0,0.25)]"
-                waitForAnimate={true}
-                effect="fade"
-                autoplay
-              >
-                <div>
-                  <h3 style={contentStyle}>1</h3>
-                </div>
-                <div>
-                  <h3 style={contentStyle}>2</h3>
-                </div>
-                <div>
-                  <h3 style={contentStyle}>3</h3>
-                </div>
-                <div>
-                  <h3 style={contentStyle}>4</h3>
-                </div>
-              </Carousel>
-            </div> */}
+                    {/* before user */}
+                    {dataHistory.product?.product_type === 'FARMER' && (
+                      <ChainItem
+                        role="Công ty hạt giống"
+                        data={
+                          (dataHistory.transactions_sf as DetailHistoryType) ||
+                          {}
+                        }
+                      />
+                    )}
+                    {dataHistory.product?.product_type === 'DISTRIBUTER' && (
+                      <>
+                        <ChainItem
+                          role="Công ty hạt giống"
+                          data={
+                            (dataHistory.transactions_sf as DetailHistoryType) ||
+                            {}
+                          }
+                        />
+                        <ChainItem
+                          role="Farmer"
+                          data={
+                            (dataHistory.transactions_sf as DetailHistoryType) ||
+                            {}
+                          }
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
-                <div className="w-full  flex">
-                  {/* Giới thiệu sản  phẩm */}
-                  {/* <div className="mt-[50px] mr-[20px] h-fit w-1/2 rounded-xl overflow-hidden border-[1px] border-gray-300 ">
-                    <div className="flex gap-x-5 p-[20px] text-[16px] font-bold border-b-[1px] border-gray-300 ">
-                      <PicLeftOutlined />
-                      Giới thiệu về sản phẩm
+                <div className="w-full flex gap-x-10 mt-[50px]">
+                  <div className="w-1/2 rounded-xl border-[1px] border-gray-300">
+                    <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
+                      <FieldTimeOutlined className="text-[20px]" />
+                      <p className="text-[16px] font-semibold tracking-wider">
+                        Bình luận
+                      </p>
                     </div>
-                    <p
-                      className={`py-[20px] px-[30px] ${
-                        !dataProduct.description && 'text-gray-500'
-                      }`}
-                    >
-                      {dataProduct.description ||
-                        'Chủ sản phẩm chưa thêm thông tin!!!'}
-                    </p>
-                  </div> */}
-                  <div className="w-1/2 p-[20px]  rounded-xl mt-[50px] pl-[50px] border-[1px] border-gray-300">
-                    <Segmented
+                    {/* <Segmented
                       size={'large'}
                       options={[
                         { label: 'Bình luận', value: 'COMMENT' },
                         { label: 'Lịch sử giao dịch', value: 'HISTORY' },
                       ]}
                       onChange={(e) => setChangePageRight(e as string)}
-                    />
-                    <div className="w-full mt-[20px]">
-                      {changePageRight === 'COMMENT' && (
-                        <div className="my-5 p-[20px] rounded-xl shadow-lg">
-                          <div className="max-h-[300px]  overflow-auto">
-                            {commentList.length ? (
-                              commentList.map((item, index) => (
-                                <CommentItem
-                                  isOwner={
-                                    dataProduct.created_by === item.user_id
-                                  }
-                                  {...item}
-                                  key={index}
-                                />
-                              ))
-                            ) : (
-                              <Empty
-                                image={Empty.PRESENTED_IMAGE_DEFAULT}
-                                description={'Chưa có bình luận nào'}
+                    /> */}
+                    <div className="w-full ">
+                      {/* {changePageRight === 'COMMENT' && ( */}
+                      <div className=" p-[20px] rounded-xl shadow-lg">
+                        <div className="max-h-[300px]  overflow-auto">
+                          {commentList.length ? (
+                            commentList.map((item, index) => (
+                              <CommentItem
+                                isOwner={
+                                  dataProduct.created_by === item.user_id
+                                }
+                                {...item}
+                                key={index}
                               />
-                            )}
-                          </div>
-                          <CommentInput marketId={params.marketId} />
+                            ))
+                          ) : (
+                            <Empty
+                              image={Empty.PRESENTED_IMAGE_DEFAULT}
+                              description={'Chưa có bình luận nào'}
+                            />
+                          )}
                         </div>
-                      )}
-                      {changePageRight === 'HISTORY' && (
-                        <Table
-                          columns={columns}
-                          dataSource={dataListTransaction}
-                          pagination={false}
-                          scroll={{ y: 340 }}
-                        />
-                      )}
+                        <CommentInput marketId={params.marketId} />
+                      </div>
+                      {/* )} */}
+                      {/* {changePageRight === 'HISTORY' && ( */}
+                      {/* )} */}
+                    </div>
+                  </div>
+                  <div className="w-1/2 h-fit rounded-xl border-[1px] border-gray-300">
+                    <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
+                      <FieldTimeOutlined className="text-[20px]" />
+                      <p className="text-[16px] font-semibold tracking-wider">
+                        Lịch sử giao dịch
+                      </p>
+                    </div>
+                    <div>
+                      <Table
+                        columns={columns}
+                        dataSource={dataListTransaction}
+                        pagination={false}
+                        scroll={{ y: '100%' }}
+                      />
                     </div>
                   </div>
                 </div>

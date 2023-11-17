@@ -74,7 +74,7 @@ export function LeftArrow() {
     <div
       // disabled={disabled}
       onClick={() => scrollPrev()}
-      className="h-[90%] my-auto flex items-center px-[3px] rounded-md bg-[#e9e9e9] hover:bg-[#9e9e9e]"
+      className="h-[90%] my-auto flex items-center px-[3px] rounded-md bg-[#e9e9e900] hover:bg-[#9e9e9e]"
     >
       <CaretLeftOutlined />
     </div>
@@ -101,7 +101,7 @@ export function RightArrow() {
     <div
       // disabled={disabled}
       onClick={() => scrollNext()}
-      className="h-[90%] my-auto flex items-center px-[3px] rounded-md bg-[#e9e9e9] hover:bg-[#9e9e9e]"
+      className="h-[90%] my-auto flex items-center px-[3px] rounded-md bg-[#e9e9e900] hover:bg-[#9e9e9e]"
     >
       <CaretRightOutlined />
     </div>

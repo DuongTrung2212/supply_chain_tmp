@@ -49,16 +49,16 @@ export default function LeaderBoard(props: Props) {
               title={`${item.total_sales} giao dịch thành công`}
             >
               <p className="text-[16px] text-[#121212] truncate">
-                {`${item.total_quantity} GD`}
+                {`${item.total_sales} GD`}
               </p>
             </Tooltip>
           </Col>
           <Col span={4}>
             <Tooltip
               placement={'bottomRight'}
-              title={`${item.total_sales} sản phẩm bán ra`}
+              title={`${item.total_quantity} sản phẩm bán ra`}
             >
-              <p className="text-[16px] text-right pl-[20px] truncate">{`${item.total_sales} SP`}</p>
+              <p className="text-[16px] text-right pl-[20px] truncate">{`${item.total_quantity} SP`}</p>
             </Tooltip>
           </Col>
         </Row>

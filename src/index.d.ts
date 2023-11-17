@@ -40,61 +40,50 @@ interface HistoryType {
       avatar?: string;
       username?: string;
       email?: string;
+      full_name?: string;
+      address_wallet?: string;
+      system_role?: string;
     };
   };
-  transactions_fm?: {
+  transactions_fm?: DetailHistoryType;
+  transactions_sf?: DetailHistoryType;
+}
+
+interface DetailHistoryType {
+  id?: string;
+  product_id?: string;
+  user_id?: string;
+  price?: number;
+  quantity?: number;
+  created_at?: string;
+  updated_at: null;
+  product?: ProductType;
+  user?: {
     id?: string;
-    product_id?: string;
-    user_id?: string;
-    price?: number;
-    quantity?: number;
-    created_at?: string;
-    updated_at?: string;
-    product?: {
-      id?: string;
-      product_type?: string;
-      product_status?: string;
-      name?: string;
-      description?: string;
-      price?: number;
-      quantity?: number;
-      banner?: number;
-      created_by?: number;
-      created_at?: number;
-      user?: {
-        id?: string;
-        avatar?: string;
-        username?: string;
-        email?: string;
-      };
-    };
+    avatar?: string;
+    username?: string;
+    email?: string;
+    phone?: string;
+    system_role?: string;
   };
-  transactions_sf?: {
+}
+
+interface TransactionType {
+  id?: string;
+  product_id?: string;
+  user_id?: string;
+  price?: number;
+  quantity?: number;
+  created_at?: string;
+  updated_at?: string;
+  product?: ProductType;
+  user?: {
     id?: string;
-    product_id?: string;
-    user_id?: string;
-    price?: number;
-    quantity?: number;
-    created_at?: string;
-    updated_at?: string;
-    product?: {
-      id?: string;
-      product_type?: string;
-      product_status?: string;
-      name?: string;
-      description?: string;
-      price?: number;
-      quantity?: number;
-      banner?: number;
-      created_by?: number;
-      created_at?: number;
-      user?: {
-        id?: string;
-        avatar?: string;
-        username?: string;
-        email?: string;
-      };
-    };
+    avatar?: string;
+    username?: string;
+    email?: string;
+    phone?: string;
+    system_role?: string;
   };
 }
 interface TopSellingType {
@@ -157,13 +146,15 @@ interface ProductType {
       product_id?: string;
     }
   ];
-
   user?: {
     id?: string;
     avatar?: string;
     username?: string;
     email?: string;
     phone?: string;
+    full_name?: string;
+    address_wallet?: string;
+    system_role?: string;
   };
 }
 interface StatisticalSystemType {
@@ -271,25 +262,6 @@ interface MarketType {
     created_at?: string;
     user?: string;
     reply_comments?: string;
-  };
-}
-
-interface TransactionType {
-  id?: string;
-  product_id?: string;
-  user_id?: string;
-  price?: number;
-  quantity?: number;
-  created_at?: string;
-  updated_at?: string;
-  product?: ProductType;
-  user?: {
-    id?: string;
-    avatar?: string;
-    username?: string;
-    email?: string;
-    phone?: string;
-    system_role?: string;
   };
 }
 

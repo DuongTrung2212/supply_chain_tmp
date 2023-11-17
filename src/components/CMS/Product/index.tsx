@@ -18,6 +18,7 @@ import {
   Col,
   ConfigProvider,
   Dropdown,
+  Empty,
   Form,
   Input,
   InputNumber,
@@ -46,6 +47,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { useEffectOnce } from 'usehooks-ts';
 import TransactionSelectItem from './TransactionSelectItem';
 import moment from 'moment';
+import UpdateProductForm from './UpdateProductForm';
 
 // interface DataType {
 //   key: React.Key;
@@ -87,8 +89,11 @@ interface TransactionType {
 
 export default memo(function ProductCMS() {
   const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [productId, setProductId] = useState('');
   const [totalProduct, setTotalProduct] = useState(0);
   const [listProduct, setListProduct] = useState<ProductType[]>([]);
+  const [currentProduct, setCurrentProduct] = useState<ProductType>({});
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const [name, setName] = useState('');
@@ -110,9 +115,19 @@ export default memo(function ProductCMS() {
     setTransactionId(e);
   };
   const fetchListTransaction = async () => {
-    await instanceAxios(`transaction_sf/list?skip=0&limit=100`)
+    await instanceAxios(
+      `${
+        currentUser.system_role === 'FARMER'
+          ? 'transaction_sf'
+          : 'transaction_fm'
+      }/list?skip=0&limit=100`
+    )
       .then((res) => {
-        setListTransaction(res.data.data.list_transaction_sf);
+        setListTransaction(
+          currentUser.system_role === 'FARMER'
+            ? res.data.data.list_transaction_sf
+            : res.data.data.list_transaction_fm
+        );
       })
       .catch((err) => console.log(err));
   };
@@ -262,15 +277,23 @@ export default memo(function ProductCMS() {
                 {
                   key: 1,
                   label: (
-                    <Link href={`/product/${record.id}`}>
-                      <Space>
+                    // <Link href={`/product/${record.id}`}>
+                    <>
+                      <Space
+                        onClick={() => {
+                          setProductId(record.id || '');
+                          setOpenModalUpdate(true);
+                          setCurrentProduct(record);
+                        }}
+                      >
                         <FontAwesomeIcon
                           icon={faPenToSquare}
                           style={{ color: '#2657ab' }}
                         />
                         <p>Chỉnh sửa</p>
                       </Space>
-                    </Link>
+                    </>
+                    // </Link>
                   ),
                 },
                 {
@@ -430,33 +453,44 @@ export default memo(function ProductCMS() {
           </Typography.Title>
           {currentModalPage === 'SELECT_TRANSACTION' && (
             <div>
-              <p className="py-[10px]">
-                * Nhắc nhở: Bạn có thể bỏ qua bước này nếu bạn là công ty hạt
-                giống
-              </p>
-              <div className="max-h-[600px] overflow-auto">
-                {listTransaction.map((item, index) => (
-                  <TransactionSelectItem
-                    transactionId={item.id || ''}
-                    onFinish={changeCurrentModalPageToCreate}
-                    key={index}
-                    image={item.product?.banner || ''}
-                    productName={item.product?.name || ''}
-                    owner={item.product?.user?.username || ''}
-                    priceTotal={item.price || 0}
-                    buyQuantity={item.quantity || 0}
-                    buyDay={item.created_at || ''}
-                  />
-                ))}
-                {currentUser.system_role === 'SEEDLING_COMPANY' && (
-                  <Button
-                    className="m-auto block"
-                    onClick={() => setCurrentModalPage('CREATE_PRODUCT')}
-                  >
-                    Bỏ qua
-                  </Button>
-                )}
-              </div>
+              {listTransaction.length ? (
+                <>
+                  <p className="py-[10px]">
+                    * Nhắc nhở: Bạn có thể bỏ qua bước này nếu bạn là công ty
+                    hạt giống
+                  </p>
+                  <div className="max-h-[600px] overflow-auto">
+                    {listTransaction.map((item, index) => (
+                      <TransactionSelectItem
+                        transactionId={item.id || ''}
+                        onFinish={changeCurrentModalPageToCreate}
+                        key={index}
+                        image={item.product?.banner || ''}
+                        productName={item.product?.name || ''}
+                        owner={item.product?.user?.username || ''}
+                        priceTotal={item.price || 0}
+                        buyQuantity={item.quantity || 0}
+                        buyDay={item.created_at || ''}
+                      />
+                    ))}
+                    {currentUser.system_role === 'SEEDLING_COMPANY' && (
+                      <Button
+                        className="m-auto block"
+                        onClick={() => setCurrentModalPage('CREATE_PRODUCT')}
+                      >
+                        Bỏ qua
+                      </Button>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_DEFAULT}
+                  description={
+                    'Bạn không có giao dịch nào! Vui lòng mua sản phẩm phù hợp cho bạn rồi quay lại !!!'
+                  }
+                />
+              )}
             </div>
           )}
 
@@ -485,6 +519,17 @@ export default memo(function ProductCMS() {
           }}
           scroll={{ y: 340 }}
         />
+        <Modal
+          open={openModalUpdate}
+          onCancel={() => setOpenModalUpdate(false)}
+          footer={[]}
+        >
+          <UpdateProductForm
+            onSuccess={() => mutate('product/me')}
+            productId={productId}
+            data={currentProduct}
+          />
+        </Modal>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export default function TransactionSelectItem(props: PropsType) {
     <div
       onMouseOver={() => setShowButton(true)}
       onMouseOut={() => setShowButton(false)}
-      className="flex w-full flex-col p-[20px] transition-all	ease-in duration-300"
+      className="flex relative w-full group flex-col p-[20px] hover:bg-[#ececec] rounded-xl transition-all duration-500 transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none"
     >
       <div className="flex gap-x-5">
         <Image
@@ -57,7 +57,7 @@ export default function TransactionSelectItem(props: PropsType) {
       {showButton && (
         <Button
           onClick={() => props.onFinish?.(props.transactionId)}
-          className="m-auto mt-[10px] w-2/3 "
+          className="m-auto absolute bottom-0 left-1/2 -translate-x-1/3 mt-[10px] w-2/3 group-hover:transition-all group-hover:duration-500 group-hover:delay-300 group-hover:transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none"
         >
           Chọn
         </Button>
