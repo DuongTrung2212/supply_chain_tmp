@@ -3,7 +3,11 @@ import CreateProductForm from '@/components/Contents/common/CreateProductForm';
 import { useAppSelector } from '@/hooks';
 import fetchUpdate from '@/services/fetchUpdate';
 import useLogin from '@/services/requireLogin';
-import { ExclamationCircleTwoTone, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteTwoTone,
+  ExclamationCircleTwoTone,
+  PlusOutlined,
+} from '@ant-design/icons';
 import {
   faCircleXmark,
   faLock,
@@ -14,6 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  Avatar,
   Button,
   Col,
   ConfigProvider,
@@ -25,12 +30,14 @@ import {
   MenuProps,
   Modal,
   Popconfirm,
+  Popover,
   Row,
   Select,
   Space,
   Tag,
   Typography,
   UploadFile,
+  message,
   notification,
 } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
@@ -48,6 +55,8 @@ import { useEffectOnce } from 'usehooks-ts';
 import TransactionSelectItem from './TransactionSelectItem';
 import moment from 'moment';
 import UpdateProductForm from './UpdateProductForm';
+import CreateProductDescriptionForm from './CreateProductDescriptionForm';
+import staticVariables from '@/static';
 
 // interface DataType {
 //   key: React.Key;
@@ -89,11 +98,16 @@ interface TransactionType {
 
 export default memo(function ProductCMS() {
   const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalCreateDescription, setOpenModalCreateDescription] =
+    useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [openModalUpdateDescription, setOpenModalUpdateDescription] =
+    useState(false);
   const [productId, setProductId] = useState('');
   const [totalProduct, setTotalProduct] = useState(0);
   const [listProduct, setListProduct] = useState<ProductType[]>([]);
   const [currentProduct, setCurrentProduct] = useState<ProductType>({});
+  const [dataCurrentProduct, setDataCurrentProduct] = useState<ProductType>({});
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const [name, setName] = useState('');
@@ -109,6 +123,30 @@ export default memo(function ProductCMS() {
   useEffectOnce(() => {
     fetchListTransaction();
   });
+  const fetchProductId = useCallback(() => {
+    instanceAxios
+      .get(`product/${currentProduct.id}`)
+      .then((res) => setDataCurrentProduct(res.data.data))
+      .catch((err) => {
+        console.log('Err', `product/${currentProduct.id}`);
+      });
+  }, [currentProduct]);
+  useEffect(() => {
+    fetchProductId();
+  }, [fetchProductId]);
+  useSWR(`product/${currentProduct.id}`, fetchProductId);
+
+  const fetchDeleteDescription = (descriptionId: string) => {
+    instanceAxios
+      .delete(`detail_description/${descriptionId}/delete`)
+      .then((res) => {
+        message.success('Đã xóa');
+        mutate(`product/${currentProduct.id}`);
+      })
+      .catch((err) => {
+        console.log('Err', `detail_description/${descriptionId}`);
+      });
+  };
 
   const changeCurrentModalPageToCreate = (e: string) => {
     setCurrentModalPage('CREATE_PRODUCT');
@@ -143,6 +181,7 @@ export default memo(function ProductCMS() {
         // [...res.data.data[1]].map((item, index) => {
         //   return newProducts.push({ ...item, key: skip * limit + index + 1 });
         // });
+        console.log(res.data.data[1]);
         const newProducts = [...res.data.data[1]].map((item, index) => ({
           ...item,
           key: skip * limit + index + 1,
@@ -299,6 +338,28 @@ export default memo(function ProductCMS() {
                 {
                   key: 2,
                   label: (
+                    // <Link href={`/product/${record.id}`}>
+                    <>
+                      <Space
+                        onClick={() => {
+                          setProductId(record.id || '');
+                          setOpenModalUpdateDescription(true);
+                          setCurrentProduct(record);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faPenToSquare}
+                          style={{ color: '#2657ab' }}
+                        />
+                        <p>Thay đổi mô tả sản phẩm</p>
+                      </Space>
+                    </>
+                    // </Link>
+                  ),
+                },
+                {
+                  key: 3,
+                  label: (
                     <Space
                       onClick={() =>
                         record.product_status === 'PUBLISH'
@@ -327,7 +388,7 @@ export default memo(function ProductCMS() {
                 },
                 !record.is_sale
                   ? {
-                      key: 3,
+                      key: 4,
                       label: (
                         <Popconfirm
                           placement={'left'}
@@ -346,7 +407,7 @@ export default memo(function ProductCMS() {
                     }
                   : null,
                 {
-                  key: 4,
+                  key: 5,
                   label: (
                     <Popconfirm
                       title="Sure to delete?"
@@ -367,50 +428,6 @@ export default memo(function ProductCMS() {
           >
             <ExclamationCircleTwoTone />
           </Dropdown>
-          {/* <Row className="flex gap-x-2">
-            <Col span={3}>
-              <Link href={`/product/${record.id}`}>
-                <FontAwesomeIcon
-                  icon={faPenToSquare}
-                  style={{ color: '#2657ab' }}
-                />
-              </Link>
-            </Col>
-            <Col span={3}>
-              {record.product_status === 'PUBLISH' ? (
-                <FontAwesomeIcon
-                  onClick={() => fetchUpdateProductStatus(record.id, 'PRIVATE')}
-                  icon={faLockOpen}
-                  style={{ color: '#27913c' }}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  onClick={() => fetchUpdateProductStatus(record.id, 'PUBLISH')}
-                  icon={faLock}
-                  style={{ color: '#a87171' }}
-                />
-              )}
-            </Col>
-            <Col span={3}>
-              <Popconfirm
-                title="Sure to open market ?"
-                onConfirm={() => fetchCreateMarket(record.id)}
-              >
-                <FontAwesomeIcon icon={faStore} style={{ color: '#65dd55' }} />
-              </Popconfirm>
-            </Col>
-            <Col span={3}>
-              <Popconfirm
-                title="Sure to delete?"
-                onConfirm={() => fetchDeleteProduct(record.id)}
-              >
-                <FontAwesomeIcon
-                  icon={faCircleXmark}
-                  style={{ color: '#c01616' }}
-                />
-              </Popconfirm>
-            </Col>
-          </Row> */}
         </ConfigProvider>
       ),
     },
@@ -521,14 +538,79 @@ export default memo(function ProductCMS() {
         />
         <Modal
           open={openModalUpdate}
+          centered
           onCancel={() => setOpenModalUpdate(false)}
           footer={[]}
         >
+          <p className="py-[30px] text-center text-[20px] font-semibold">
+            Câp nhật sản phẩm
+          </p>
           <UpdateProductForm
             onSuccess={() => mutate('product/me')}
             productId={productId}
             data={currentProduct}
           />
+        </Modal>
+        <Modal
+          open={openModalUpdateDescription}
+          centered
+          onCancel={() => setOpenModalUpdateDescription(false)}
+          footer={[]}
+        >
+          <div className="py-[30px] flex justify-between ">
+            <p className="text-[20px] font-semibold">Cập nhật mô tả sản phẩm</p>
+            <button
+              className="text-[16px]"
+              onClick={() => setOpenModalCreateDescription(true)}
+            >
+              Thêm mô tả
+            </button>
+          </div>
+          <div>
+            {dataCurrentProduct.detail_description?.length ? (
+              dataCurrentProduct.detail_description.map((item, index) => (
+                <Popover
+                  title={item.title}
+                  placement={'left'}
+                  content={item.description}
+                  key={index}
+                >
+                  <div
+                    key={index}
+                    className="flex items-center justify-between rounded-xl bg-[#fafafa] hover:bg-[#c7c7c7] p-[15px] w-full"
+                  >
+                    <div className=" flex items-center space-x-3">
+                      <Avatar src={item.image} />
+                      <p>{item.title}</p>
+                    </div>
+                    <DeleteTwoTone
+                      onClick={() => fetchDeleteDescription(item.id || '')}
+                    />
+                  </div>
+                </Popover>
+              ))
+            ) : (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_DEFAULT}
+                description={'Sản phẩm này không có mô tả nào'}
+              />
+            )}
+          </div>
+          <Modal
+            open={openModalCreateDescription}
+            centered
+            onCancel={() => setOpenModalCreateDescription(false)}
+            footer={[]}
+          >
+            <p className="py-[30px] text-center text-[20px] font-semibold">
+              Thêm mô tả sản phẩm
+            </p>
+            <CreateProductDescriptionForm
+              onSuccess={() => mutate(`product/${currentProduct.id}`)}
+              productId={productId}
+              data={currentProduct}
+            />
+          </Modal>
         </Modal>
       </div>
     </div>

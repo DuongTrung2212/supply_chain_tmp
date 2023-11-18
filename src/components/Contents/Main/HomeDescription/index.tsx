@@ -27,7 +27,8 @@ export default function HomeDescription({ alignRight }: Props) {
       <Image
         width={400}
         height={350}
-        className={`object-cover rounded m-auto`}
+        preview={false}
+        className={`object-cover rounded-xl m-auto`}
         alt=""
         src={staticVariables.logo.src}
       />

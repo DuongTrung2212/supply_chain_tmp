@@ -155,7 +155,7 @@ export default function GeneralInformation() {
                 initialValue={currentUser.full_name || ''}
               />
               <Tag className="w-fit" color="success">
-                Fammer
+                {currentUser.system_role}
               </Tag>
             </div>
             <Row className="w-full flex items-center">

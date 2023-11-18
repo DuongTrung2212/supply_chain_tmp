@@ -98,6 +98,7 @@ export default memo(function CMSPage() {
         <Layout className="w-full">
           <Sider
             className="relative"
+            theme={'light'}
             // collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}

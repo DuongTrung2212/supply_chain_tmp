@@ -540,7 +540,11 @@ export default memo(function Header() {
               </div>
             </Popover>
 
-            <Dropdown menu={{ items }} placement={'bottom'}>
+            <Dropdown
+              getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
+              menu={{ items }}
+              placement={'bottom'}
+            >
               {/* {listUnreadNotifications ? (
                 <Badge
                   count={listUnreadNotifications}

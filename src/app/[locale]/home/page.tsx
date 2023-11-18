@@ -229,7 +229,7 @@ export default function HomePage() {
       ) : (
         <>
           <Header />
-          <div className="w-full flex-col items-center bg-[url('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2022/05/22/16532399004541.jpg')]">
+          <div className="w-full flex-col items-center bg-cover	 bg-[url('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2022/05/22/16532399004541.jpg')]">
             <div className="w-full flex flex-col">
               <div className="w-1/3 h-[300px] text-white flex items-center ">
                 <div className="text-[32px] px-[20px]">

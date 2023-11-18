@@ -420,7 +420,7 @@ export default function MarketInfo({
                   </Link>
                 </div>
                 <div className="text-[16px] leading-10 text-[#5f5e5e] text-justify">
-                  {dataProduct.description &&
+                  {dataProduct.description ||
                     'Chủ sản phẩm vẫn chưa thêm mô tả gì?????'}
                 </div>
 
@@ -652,14 +652,14 @@ export default function MarketInfo({
                         <ChainItem
                           role="Công ty hạt giống"
                           data={
-                            (dataHistory.transactions_sf as DetailHistoryType) ||
+                            (dataHistory.transactions_fm as DetailHistoryType) ||
                             {}
                           }
                         />
                         <ChainItem
                           role="Farmer"
                           data={
-                            (dataHistory.transactions_sf as DetailHistoryType) ||
+                            (dataHistory.transactions_fm as DetailHistoryType) ||
                             {}
                           }
                         />
