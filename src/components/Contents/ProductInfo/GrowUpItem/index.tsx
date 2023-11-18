@@ -49,16 +49,16 @@ export default function GrowUpItem(props: GrowUpType) {
         <div className="relative w-fit">
           <Image
             preview={false}
-            onClick={() => setShowListImageModal(true)}
+            // onClick={() => setShowListImageModal(true)}
             alt=""
             className="object-cover rounded drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)]"
             width={300}
             height={200}
             src={props.image}
           />
-          <p className="absolute bottom-0 text-white right-0 py-[20px] px-[30px] bg-[#000000B5] rounded">
+          {/* <p className="absolute bottom-0 text-white right-0 py-[20px] px-[30px] bg-[#000000B5] rounded">
             +1
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="p-[30px] ml-[40px] rounded border-[1px] border-[#42bb67] w-2/3 max-h-2/3 ">
@@ -66,7 +66,7 @@ export default function GrowUpItem(props: GrowUpType) {
           onClick={() => setShowDescriptionModal(true)}
           level={3}
         >
-          Thay đổi của sản cây vào ngày{' '}
+          {/* Thay đổi của sản cây vào ngày{' '} */}
           {moment(props.created_at).format('DD/MM/YYYY')}
         </Typography.Title>
         <p className="line-clamp-6 whitespace-pre-wrap bg-inherit text-justify ">
@@ -110,9 +110,9 @@ export default function GrowUpItem(props: GrowUpType) {
         open={showDescriptionModal}
         footer={[]}
       >
-        <Typography.Title level={3}>
+        {/* <Typography.Title level={3}>
           Thông tin về sự phát triển của sản phẩm ngày 23
-        </Typography.Title>
+        </Typography.Title> */}
         <div>{props.description}</div>
       </Modal>
     </div>

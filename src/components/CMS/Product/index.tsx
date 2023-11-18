@@ -569,25 +569,25 @@ export default memo(function ProductCMS() {
           <div>
             {dataCurrentProduct.detail_description?.length ? (
               dataCurrentProduct.detail_description.map((item, index) => (
-                <Popover
-                  title={item.title}
-                  placement={'left'}
-                  content={item.description}
+                //   <Popover
+                //     title={item.title}
+                //     placement={'right'}
+                //     content={item.description}
+                //     key={index}
+                //   >
+                <div
                   key={index}
+                  className="flex items-center justify-between rounded-xl bg-[#fafafa] hover:bg-[#c7c7c7] p-[15px] w-full"
                 >
-                  <div
-                    key={index}
-                    className="flex items-center justify-between rounded-xl bg-[#fafafa] hover:bg-[#c7c7c7] p-[15px] w-full"
-                  >
-                    <div className=" flex items-center space-x-3">
-                      <Avatar src={item.image} />
-                      <p>{item.title}</p>
-                    </div>
-                    <DeleteTwoTone
-                      onClick={() => fetchDeleteDescription(item.id || '')}
-                    />
+                  <div className=" flex items-center space-x-3">
+                    <Avatar src={item.image} />
+                    <p>{item.title}</p>
                   </div>
-                </Popover>
+                  <DeleteTwoTone
+                    onClick={() => fetchDeleteDescription(item.id || '')}
+                  />
+                </div>
+                // </Popover>
               ))
             ) : (
               <Empty
