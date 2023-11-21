@@ -463,62 +463,81 @@ export default memo(function ProductCMS() {
           onCancel={() => setOpenModalCreate(false)}
           footer={[]}
         >
-          <Typography.Title className="w-fit m-auto" level={3}>
-            {currentModalPage === 'CREATE_PRODUCT'
-              ? `Thêm sản phẩm`
-              : `Chọn hóa đơn`}
-          </Typography.Title>
-          {currentModalPage === 'SELECT_TRANSACTION' && (
-            <div>
-              {listTransaction.length ? (
-                <>
-                  <p className="py-[10px]">
-                    * Nhắc nhở: Bạn có thể bỏ qua bước này nếu bạn là công ty
-                    hạt giống
-                  </p>
-                  <div className="max-h-[600px] overflow-auto">
-                    {listTransaction.map((item, index) => (
-                      <TransactionSelectItem
-                        transactionId={item.id || ''}
-                        onFinish={changeCurrentModalPageToCreate}
-                        key={index}
-                        image={item.product?.banner || ''}
-                        productName={item.product?.name || ''}
-                        owner={item.product?.user?.username || ''}
-                        priceTotal={item.price || 0}
-                        buyQuantity={item.quantity || 0}
-                        buyDay={item.created_at || ''}
-                      />
-                    ))}
-                    {currentUser.system_role === 'SEEDLING_COMPANY' && (
-                      <Button
-                        className="m-auto block"
-                        onClick={() => setCurrentModalPage('CREATE_PRODUCT')}
-                      >
-                        Bỏ qua
-                      </Button>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_DEFAULT}
-                  description={
-                    'Bạn không có giao dịch nào! Vui lòng mua sản phẩm phù hợp cho bạn rồi quay lại !!!'
-                  }
+          {currentUser.system_role === 'SEEDLING_COMPANY' ? (
+            <>
+              <Typography.Title className="w-fit m-auto" level={3}>
+                Thêm sản phẩm
+              </Typography.Title>
+              <CreateProductForm
+                onSuccess={() => {
+                  setOpenModalCreate(false);
+                  mutate('product/me');
+                }}
+                transactionId={transactionId}
+              />
+            </>
+          ) : (
+            <>
+              <Typography.Title className="w-fit m-auto" level={3}>
+                {currentModalPage === 'CREATE_PRODUCT'
+                  ? `Thêm sản phẩm`
+                  : `Chọn hóa đơn`}
+              </Typography.Title>
+              {currentModalPage === 'SELECT_TRANSACTION' && (
+                <div>
+                  {listTransaction.length ? (
+                    <>
+                      <p className="py-[10px]">
+                        * Nhắc nhở: Bạn có thể bỏ qua bước này nếu bạn là công
+                        ty hạt giống
+                      </p>
+                      <div className="max-h-[600px] overflow-auto">
+                        {listTransaction.map((item, index) => (
+                          <TransactionSelectItem
+                            transactionId={item.id || ''}
+                            onFinish={changeCurrentModalPageToCreate}
+                            key={index}
+                            image={item.product?.banner || ''}
+                            productName={item.product?.name || ''}
+                            owner={item.product?.user?.username || ''}
+                            priceTotal={item.price || 0}
+                            buyQuantity={item.quantity || 0}
+                            buyDay={item.created_at || ''}
+                          />
+                        ))}
+                        {currentUser.system_role === 'SEEDLING_COMPANY' && (
+                          <Button
+                            className="m-auto block"
+                            onClick={() =>
+                              setCurrentModalPage('CREATE_PRODUCT')
+                            }
+                          >
+                            Bỏ qua
+                          </Button>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <Empty
+                      image={Empty.PRESENTED_IMAGE_DEFAULT}
+                      description={
+                        'Bạn không có giao dịch nào! Vui lòng mua sản phẩm phù hợp cho bạn rồi quay lại !!!'
+                      }
+                    />
+                  )}
+                </div>
+              )}
+
+              {currentModalPage === 'CREATE_PRODUCT' && (
+                <CreateProductForm
+                  onSuccess={() => {
+                    setOpenModalCreate(false);
+                    mutate('product/me');
+                  }}
+                  transactionId={transactionId}
                 />
               )}
-            </div>
-          )}
-
-          {currentModalPage === 'CREATE_PRODUCT' && (
-            <CreateProductForm
-              onSuccess={() => {
-                setOpenModalCreate(false);
-                mutate('product/me');
-              }}
-              transactionId={transactionId}
-            />
+            </>
           )}
         </Modal>
       </div>

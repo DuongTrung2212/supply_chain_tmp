@@ -126,6 +126,7 @@ export default function CreateProductForm({
           description: 'Tạo sản phẩm thành công',
         });
         onSuccess?.();
+        setFileAvartar([]);
       })
       .catch((err) => {
         console.log(err);
@@ -168,7 +169,7 @@ export default function CreateProductForm({
         <Form.Item<FormType>
           label="Ảnh chính của sản phẩm"
           valuePropName="fileList"
-          name={'avatar'}
+          name={'banner'}
           getValueFromEvent={normFile}
           rules={[
             { required: true, message: 'Please choose your product image' },
@@ -187,28 +188,7 @@ export default function CreateProductForm({
             {fileAvartar.length >= 1 ? null : uploadButton}
           </Upload>
         </Form.Item>
-        <Form.Item<FormType>
-          label="Ảnh banner"
-          valuePropName="fileList"
-          name={'banner'}
-          getValueFromEvent={normFile}
-          rules={[
-            { required: true, message: 'Please choose your product image' },
-          ]}
-        >
-          <Upload
-            accept="image/png, image/jpeg, image/jpg"
-            // action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-            listType="picture-card"
-            multiple
-            // fileList={fileList}
-            maxCount={8}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= 6 ? null : uploadButton}
-          </Upload>
-        </Form.Item>
+
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button loading={loading} htmlType="submit">
             Submit

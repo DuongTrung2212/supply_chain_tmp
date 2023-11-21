@@ -211,7 +211,9 @@ export default function MarketInfo({
         await instanceAxios
           .get(`product/${res.data.data.order_id}/history`)
           .then((res) => {
-            setDataHistory(res.data.data);
+            if (res.data.data.product) {
+              setDataHistory(res.data.data);
+            } else setDataHistory({ product: res.data.data });
           })
           .catch((err) => console.log('asdadasd'));
 
@@ -391,7 +393,7 @@ export default function MarketInfo({
                   alt=""
                   width={'100%'}
                   preview={false}
-                  height={'100%'}
+                  height={450}
                   src={dataProduct.banner}
                 />
               </div>
@@ -685,7 +687,7 @@ export default function MarketInfo({
                     /> */}
                     <div className="w-full ">
                       {/* {changePageRight === 'COMMENT' && ( */}
-                      <div className=" p-[20px] rounded-xl shadow-lg">
+                      <div className=" p-[20px] rounded-xl">
                         <div className="max-h-[300px]  overflow-auto">
                           {commentList.length ? (
                             commentList.map((item, index) => (

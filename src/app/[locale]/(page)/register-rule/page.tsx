@@ -7,6 +7,7 @@ import {
   Button,
   ConfigProvider,
   Image,
+  Input,
   Radio,
   Space,
   Typography,
@@ -24,12 +25,11 @@ export default function RegisterRulePage() {
   const [gender, setGender] = useState('');
   const [yearOld, setYearOld] = useState('');
   const [education, setEducation] = useState('');
-  const [device, setDevice] = useState('');
-  const [numericKeypad, setNumericKeypad] = useState('');
+  const [workSpace, setWorkSpace] = useState('');
   const [experience, setExperience] = useState('');
-  const [digitsExperience, setDigitsExperience] = useState('');
-  const [aphabetExperience, setAphabetExperience] = useState('');
-  const [japaneseAbility, setJapaneseAbility] = useState('');
+  const [buyAndSellExperiance, setBuyAndSellExperiance] = useState('');
+  const [worryBuyProduct, setWorryBuyProduct] = useState('');
+  const [longLasting, setLongLasting] = useState('');
   const [loading, setLoading] = useState(false);
   const route = useRouter();
   const { mutate } = useSWRConfig();
@@ -58,7 +58,9 @@ export default function RegisterRulePage() {
     // Get start
     <div key={0}>
       <div>
-        <p className="text-lg font-medium">Chào mừng bạn tham gia OPENCROWD</p>
+        <p className="text-lg font-medium">
+          Chào mừng bạn tham gia SUPPLY CHAIN SYSTEM
+        </p>
         <p className="pt-[12px] pb-[20px] text-[14px]">
           Hãy bắt đầu thiết lập tài khoản của bạn!
         </p>
@@ -74,12 +76,12 @@ export default function RegisterRulePage() {
     </div>,
     // Question1
     <div key={2}>
-      <p className="text-2xl py-2 font-medium">Hi {currentUser.full_name}</p>
       <div className="flex flex-col gap-y-5">
         <RadioCustom
           defaulValue={gender}
           onChange={(e) => setGender(e)}
           title="Giới tính của bạn là gì?"
+          spaceProps={{ direction: 'vertical' }}
           itemList={[
             { label: 'Nam', value: 'Nam' },
             { label: 'Nữ', value: 'Nữ' },
@@ -88,6 +90,7 @@ export default function RegisterRulePage() {
         <RadioCustom
           defaulValue={yearOld}
           onChange={(e) => setYearOld(e)}
+          spaceProps={{ direction: 'vertical' }}
           title="Xin vui lòng cho biết, Anh/Chị nằm trong độ tuổi nào? "
           itemList={[
             { label: 'Từ 18-25 tuổi', value: 'Từ 18-25 tuổi' },
@@ -112,13 +115,14 @@ export default function RegisterRulePage() {
         <RadioCustom
           defaulValue={education}
           onChange={(e) => setEducation(e)}
-          title="Xin vui lòng cho biết, trình độ học vấn hiện tại của Anh/Chị"
+          title="Xin vui lòng cho biết, trình độ học vấn hiện tại của Anh/Chị? "
           spaceProps={{ direction: 'vertical' }}
           itemList={[
             { label: 'Trung cấp', value: 'Trung cấp' },
             { label: 'Cao đẳng', value: 'Cao đẳng' },
             { label: 'Đại học', value: 'Đại học' },
             { label: 'Sau đại học', value: 'Sau đại học' },
+            { label: 'Khác', value: 'Khác' },
           ]}
         />
       </div>
@@ -134,24 +138,24 @@ export default function RegisterRulePage() {
     // Question 3
     <div key={4}>
       <div className="flex flex-col gap-y-5">
-        <RadioCustom
-          defaulValue={device}
-          onChange={(e) => setDevice(e)}
-          title="Anh/chị sử dụng loại máy tính gì để thực hiện công việc?"
-          spaceProps={{ direction: 'vertical' }}
-          itemList={[
-            { label: 'Máy bàn ( PC)', value: 'Máy bàn ( PC)' },
-            { label: 'Laptop', value: 'Laptop' },
-          ]}
+        <p>Anh/chị đã từng làm việc ở đâu?</p>
+        <Input
+          type="text"
+          onChange={(e) => {
+            setWorkSpace(e.target.value);
+          }}
+          placeholder="Nhập kết quả của bạn"
         />
         <RadioCustom
-          defaulValue={numericKeypad}
-          onChange={(e) => setNumericKeypad(e)}
-          title="Anh/chị đã thuộc phím trên bàn phím số không?"
+          defaulValue={experience}
+          onChange={(e) => setExperience(e)}
+          title="Anh/chị đã có kinh nghiệm bao nhiêu năm?"
           spaceProps={{ direction: 'vertical' }}
           itemList={[
-            { label: 'Có', value: 'Có thuộc phím trên bàn phím số' },
-            { label: 'Không', value: 'Không thuộc phím trên bàn phím số' },
+            { label: 'Từ 1-2 năm', value: 'Từ 1 năm đến 2 năm kinh nghiệm' },
+            { label: 'Từ 2-5 năm', value: 'Từ 2 năm đến 5 năm kinh nghiệm' },
+            { label: 'Từ 5-10 năm', value: 'Từ 5 năm đến 10 năm kinh nghiệm' },
+            { label: 'Trên 10 năm', value: 'Trên 10 năm kinh nghiệm' },
           ]}
         />
       </div>
@@ -159,7 +163,7 @@ export default function RegisterRulePage() {
         <Button className="" onClick={handlePrev}>
           Trước
         </Button>
-        <Button disabled={!!!device || !!!numericKeypad} onClick={handleSubmit}>
+        <Button disabled={!!!workSpace || !!!experience} onClick={handleSubmit}>
           Next
         </Button>
       </div>
@@ -168,25 +172,25 @@ export default function RegisterRulePage() {
     <div key={5}>
       <div className="flex flex-col gap-y-5">
         <RadioCustom
-          defaulValue={digitsExperience}
-          onChange={(e) => setDigitsExperience(e)}
-          title="Anh/chị có kinh nghiệm nhập chữ số viết tay không?"
+          defaulValue={buyAndSellExperiance}
+          onChange={(e) => setBuyAndSellExperiance(e)}
+          title="Anh/chị đã từng mua bán hàng hóa online bao giờ chưa?"
           spaceProps={{ direction: 'vertical' }}
           itemList={[
-            { label: 'Có', value: 'Có kinh nghiệm nhập chữ số viết tay' },
-            { label: 'Không', value: 'Không kinh nghiệm nhập chữ số viết tay' },
+            { label: 'Đã từng', value: 'Đã từng mua bán hàng online' },
+            { label: 'Chưa từng', value: 'Chưa từng mua bán hàng online' },
           ]}
         />
         <RadioCustom
-          defaulValue={aphabetExperience}
-          onChange={(e) => setAphabetExperience(e)}
-          title="Anh/chị có kinh nghiệm nhập chữ Aphabet viết tay không ?"
+          defaulValue={worryBuyProduct}
+          onChange={(e) => setWorryBuyProduct(e)}
+          title="Anh/chị có lo lắng khi mua báng hàng online không ?"
           spaceProps={{ direction: 'vertical' }}
           itemList={[
-            { label: 'Có', value: 'Có kinh nghiệm nhập chữ Aphabet viết tay' },
+            { label: 'Có', value: 'Lo lắng khi mua bán hàng online' },
             {
               label: 'Không',
-              value: 'Không kinh nghiệm nhập chữ Aphabet viết tay',
+              value: 'Không lo lắng khi mua bán hàng online',
             },
           ]}
         />
@@ -196,7 +200,7 @@ export default function RegisterRulePage() {
           Trước
         </Button>
         <Button
-          disabled={!!!aphabetExperience || !!!digitsExperience}
+          disabled={!!!worryBuyProduct || !!!buyAndSellExperiance}
           onClick={handleSubmit}
         >
           Next
@@ -207,15 +211,15 @@ export default function RegisterRulePage() {
     <div key={5}>
       <div className="flex flex-col gap-y-5">
         <RadioCustom
-          defaulValue={japaneseAbility}
-          onChange={(e) => setJapaneseAbility(e)}
-          title="Anh/chị có năng lực tiếng Nhật không ?"
+          defaulValue={longLasting}
+          onChange={(e) => setLongLasting(e)}
+          title="Anh/chị có dự định sử dụng dịch vụ của chúng tôi lâu dài không ?"
           spaceProps={{ direction: 'vertical' }}
           itemList={[
-            { label: 'Có', value: 'Có năng lực tiếng Nhật' },
+            { label: 'Có', value: 'Có dự định sử dụng dịch vụ lâu dài' },
             {
               label: 'Không',
-              value: 'Không năng lực tiếng Nhật',
+              value: 'Không dự định sử dụng dịch vụ lâu dài',
             },
           ]}
         />
@@ -224,7 +228,7 @@ export default function RegisterRulePage() {
         <Button className="" onClick={handlePrev}>
           Trước
         </Button>
-        <Button disabled={!!!japaneseAbility} onClick={handleSubmit}>
+        <Button disabled={!!!longLasting} onClick={handleSubmit}>
           Hoàn thành
         </Button>
       </div>
@@ -241,11 +245,10 @@ export default function RegisterRulePage() {
           gender,
           yearOld,
           education,
-          device,
-          numericKeypad,
-          digitsExperience,
-          aphabetExperience,
-          japaneseAbility,
+          workSpace,
+          buyAndSellExperiance,
+          worryBuyProduct,
+          longLasting,
         },
       })
       .then((res) => {
@@ -264,7 +267,7 @@ export default function RegisterRulePage() {
       .catch((err) => {
         notification.error({
           message: 'Lỗi',
-          description: 'Yêu cầu xác thựcthật bại',
+          description: 'Yêu cầu xác thực thất bại',
         });
       });
   };
@@ -289,28 +292,7 @@ export default function RegisterRulePage() {
       <div className="w-1/2 h-full min-h-[750px] px-[100px] py-[150px] bg-[#f9f9f9]">
         {listTab[currentTab]}
       </div>
-      {/* <div className="flex h-full w-full">{listTab[currentTab]}</div>
-      <div className="flex items-center gap-x-10 mt-10">
-        <Button
-          loading={loading}
-          disabled={currentTab <= listTab.length - 1}
-          // style={{ backgroundColor: '#FFFAFAB5' }}
-          type={'default'}
-          className="w-1/3 backdrop-blur-sm"
-          onClick={handlePrev}
-        >
-          Quay lại
-        </Button>
-        <Button
-          loading={loading}
-          // style={{ backgroundColor: '#FFFAFAB5' }}
-          type={'default'}
-          className="w-2/3 backdrop-blur-sm"
-          onClick={handleSubmit}
-        >
-          Tiếp theo
-        </Button>
-      </div> */}
+      {}
     </div>
   );
 }

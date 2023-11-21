@@ -311,7 +311,7 @@ export default function HomePage() {
                       <LeaderBoard
                         listTopSelling={dataTopSelling.slice(
                           0,
-                          dataTopSelling.length / 2
+                          Math.round(dataTopSelling.length / 2)
                         )}
                       />
                     ) : (
@@ -321,9 +321,9 @@ export default function HomePage() {
                   {dataTopSelling.length > 1 && (
                     <div className="w-1/2">
                       <LeaderBoard
-                        skip={Math.floor(dataTopSelling.length / 2)}
+                        skip={Math.round(dataTopSelling.length / 2)}
                         listTopSelling={dataTopSelling.slice(
-                          dataTopSelling.length / 2,
+                          Math.round(dataTopSelling.length / 2),
                           dataTopSelling.length
                         )}
                       />

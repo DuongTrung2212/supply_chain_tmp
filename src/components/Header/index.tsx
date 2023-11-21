@@ -94,7 +94,7 @@ export default memo(function Header() {
   const [listNotifications, setListNotifications] = useState<
     NotificationItemType[]
   >([]);
-  // const [listUnreadNotifications, setListUnreadNotifications] = useState(0);
+  const [listUnreadNotifications, setListUnreadNotifications] = useState(0);
   // const [totalNotifications, setTotalNotifications] = useState(0);
   const debouncedValue = useDebounce<string>(valueSearch, 300);
   const { mutate } = useSWRConfig();
@@ -157,7 +157,7 @@ export default memo(function Header() {
       .get(`notifications/list`)
       .then((res) => {
         setListNotifications(res.data.data);
-        // setListUnreadNotifications(res.data.data.meta.unread_total);
+        setListUnreadNotifications(res.data.meta.unread_total);
         // setTotalNotifications(res.data.data.meta.total);
       })
       .catch((err) => console.log(err));
@@ -521,9 +521,9 @@ export default memo(function Header() {
               content={contentNotifications}
             >
               <div className="bg-[#1212120A] hover:bg-[#ececec] px-[20px] py-[10px] rounded-lg">
-                {listNotifications.length ? (
+                {listUnreadNotifications ? (
                   <Badge
-                    count={listNotifications.length}
+                    count={listUnreadNotifications}
                     offset={[16, -8]}
                     color="blue"
                   >
