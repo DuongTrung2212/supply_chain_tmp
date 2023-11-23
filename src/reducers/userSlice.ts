@@ -13,6 +13,7 @@ export const initialUser: UserType = {
   full_name: '',
   birthday: '',
   phone: '',
+  // description:'',
   address_wallet: '',
   address_real: '',
   is_active: false,

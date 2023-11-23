@@ -290,3 +290,19 @@ interface NotificationItemType {
     system_role?: string;
   };
 }
+
+interface IActivatedType{
+  total_activities: int,
+    list_activities?: [
+      {
+        "data": {
+          "message": "seedling has created the product  - cay giong 1"
+        },
+        "product_id": "68b1ec2f-f34c-4dfc-8d05-53568b061188",
+        "created_at": "2023-11-23T14:22:20.781839+07:00",
+        "id": "e9bc3eca-1e12-4c88-a5ae-824dedcc7b26",
+        "user_id": "a98c4ce8-2fee-4ad4-9652-8848f3afe50d",
+        "updated_at": "2023-11-23T14:22:20.781839+07:00"
+      }
+    ]
+}
