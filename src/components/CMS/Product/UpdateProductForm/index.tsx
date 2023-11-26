@@ -174,28 +174,6 @@ export default function UpdateProductForm({
         >
           <TextArea minLength={10} />
         </Form.Item>
-        {/* <Form.Item<FormType>
-          label="Ảnh chính của sản phẩm"
-          valuePropName="fileList"
-          name={'avatar'}
-          getValueFromEvent={normFile}
-          rules={[
-            { required: true, message: 'Please choose your product image' },
-          ]}
-        >
-          <Upload
-            accept="image/png, image/jpeg, image/jpg"
-            // action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-            listType="picture-card"
-            // multiple
-            // fileList={fileList}
-            maxCount={1}
-            onPreview={handlePreview}
-            onChange={handleChangeAvatar}
-          >
-            {fileAvartar.length >= 1 ? null : uploadButton}
-          </Upload>
-        </Form.Item> */}
         <Form.Item<FormType>
           label="Ảnh banner"
           //   valuePropName="banner"

@@ -1,3 +1,5 @@
+import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Col, Row, Tooltip } from 'antd';
 import React from 'react';
 
@@ -34,11 +36,13 @@ export default function ChainItem({
           <p className="pr-[10px] truncate">{data.product?.user?.email}</p>
         </Tooltip>
       </Col>
-      <Col span={6}>
+      <Col span={4}>
         <Tooltip title={data.product?.user?.address_wallet}>
           <p className="pr-[10px] truncate">
-            {data.product?.user?.address_wallet ||
-              '0x12abcdefhxzxasdddddddddddddddddddddddddddddddddddddddddddd'}
+            {data.product?.user?.tx_hash && <a href={`https://goerli.arbiscan.io/tx/${data.product?.user?.tx_hash}`} target='_blank'>
+            <FontAwesomeIcon icon={faUpRightFromSquare} style={{color: "#000"}}/>
+            </a>
+              }
           </p>
         </Tooltip>
       </Col>

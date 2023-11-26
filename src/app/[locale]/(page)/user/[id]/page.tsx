@@ -19,9 +19,13 @@ import {
 } from '@ant-design/icons';
 import {faSquareFacebook} from '@fortawesome/free-brands-svg-icons';
 import {
+    faAddressBook,
     faEnvelope,
     faHandshake,
+    faLocation,
+    faMapLocation,
     faSquarePhone,
+    faWallet,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
@@ -205,13 +209,13 @@ export default function UserInfo({params}: { params: { id: string } }) {
                                 className="justify-between border-[1px] rounded px-[20px] py-[10px]"
                             >
                                 <FontAwesomeIcon size={'2x'} icon={faSquarePhone}/>
-                                <Typography.Text copyable>01234567899</Typography.Text>
+                                <Typography.Text copyable>{currentUser?.phone || ""}</Typography.Text>
                             </Space>
                             <Space
                                 size={20}
                                 className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
                             >
-                                <FontAwesomeIcon size={'2x'} icon={faSquareFacebook}/>
+                                <FontAwesomeIcon size={'2x'} style={{color: "#105ce0",}} icon={faSquareFacebook} />
                                 <Typography.Text copyable>
                                     https://www.facebook.com/
                                 </Typography.Text>
@@ -220,9 +224,9 @@ export default function UserInfo({params}: { params: { id: string } }) {
                                 size={20}
                                 className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
                             >
-                                <FontAwesomeIcon size={'2x'} icon={faEnvelope}/>
+                                <FontAwesomeIcon size={'2x'} icon={faWallet}/>
                                 <Typography.Text copyable>
-                                    0x8c73197a561Be04BA0234De2D68C20421AF0546e
+                                    {currentUser.address_wallet}
                                 </Typography.Text>
                             </Space>
                             <Space
@@ -231,16 +235,16 @@ export default function UserInfo({params}: { params: { id: string } }) {
                             >
                                 <FontAwesomeIcon size={'2x'} icon={faEnvelope}/>
                                 <Typography.Text copyable>
-                                    duongtrungqb12@gmail.com
+                                    {currentUser.email}
                                 </Typography.Text>
                             </Space>
                             <Space
                                 size={20}
                                 className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
                             >
-                                <FontAwesomeIcon size={'2x'} icon={faEnvelope}/>
+                                <FontAwesomeIcon size={'2x'} style={{color: "#14A2E0",}} icon={faMapLocation}/>
                                 <Typography.Text copyable>
-                                    14 Doãn Uẩn - Khuê Mỹ - Ngũ Hành Sơn - Đà Nẵng
+                                    {currentUser.address_real}
                                 </Typography.Text>
                             </Space>
                         </div>

@@ -76,6 +76,7 @@ import {
   faCircleCheck,
   faEnvelope,
   faMobileScreenButton,
+  faUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import GrowUpItem from '@/components/Contents/ProductInfo/GrowUpItem';
 import Paragraph from 'antd/es/typography/Paragraph';
@@ -134,7 +135,8 @@ export default function MarketInfo({
   const currentUser = useAppSelector((state) => state.user.user);
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
-
+  console.log("list transaction:" ,dataListTransaction);
+  
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -263,8 +265,7 @@ export default function MarketInfo({
   const fetchDataComment = async () => {
     await instanceAxios
       .get(
-        `comments/list?marketplace_id=${
-          params.marketId
+        `comments/list?marketplace_id=${params.marketId
         }&skip=${0}&limit=${1000}`
       )
       .then((res) => {
@@ -368,6 +369,14 @@ export default function MarketInfo({
       dataIndex: 'time',
       render: (value, record, index) =>
         moment(record.created_at).format('DD/MM/YYYY'),
+    },
+    {
+      title: 'Mã giao dịch',
+      dataIndex: 'tx_hash',
+      render: (value, record, index) =>(
+        <a href={`https://goerli.arbiscan.io/tx/${record.tx_hash}`} target="_blank">
+            <FontAwesomeIcon icon={faUpRightFromSquare} style={{color: "#000"}}/>
+        </a>)
     },
     // {
     //   title: 'Status',
@@ -519,8 +528,8 @@ export default function MarketInfo({
                               buyQuantity
                                 ? fetchAddCartItem()
                                 : notification.error({
-                                    message: 'Vui lòng chọn số lượng',
-                                  });
+                                  message: 'Vui lòng chọn số lượng',
+                                });
                             })
                           }
                           className="w-1/5 text-center bg-[#2081E1] py-[12px]"
@@ -545,8 +554,7 @@ export default function MarketInfo({
                         onSuccess={() => {
                           setShowModalPay(false);
                           mutate(`marketplace/id`);
-                        }}
-                      />
+                        }} receiver={''} phone={''} address={''} />
                     </Modal>
                   </div>
                 </div>
@@ -631,8 +639,8 @@ export default function MarketInfo({
                       <Col span={4}>
                         <p>Email</p>
                       </Col>
-                      <Col span={6}>
-                        <p>Địa chỉ ví</p>
+                      <Col span={4}>
+                        <p>Mã giao dịch</p>
                       </Col>
                     </Row>
                     <ChainItem
@@ -736,18 +744,18 @@ export default function MarketInfo({
                 {((dataMarket.order_type !== 'SEEDLING_COMPANY' &&
                   dataHistory.transactions_sf) ||
                   dataHistory.transactions_fm) && (
-                  <ProductOrigin
-                    originType={
-                      dataMarket.order_type === 'SEEDLING_COMPANY'
-                        ? 'seed'
-                        : 'provider'
-                    }
-                    transactions={
-                      dataHistory.transactions_sf || dataHistory.transactions_fm
-                    }
-                    {...dataHistory}
-                  />
-                )}
+                    <ProductOrigin
+                      originType={
+                        dataMarket.order_type === 'SEEDLING_COMPANY'
+                          ? 'seed'
+                          : 'provider'
+                      }
+                      transactions={
+                        dataHistory.transactions_sf || dataHistory.transactions_fm
+                      }
+                      {...dataHistory}
+                    />
+                  )}
               </>
             )}
             {dataMarket.order_type === 'FARMER' && (
@@ -789,11 +797,10 @@ export default function MarketInfo({
                     {dataProduct.detail_description?.map((item, index) => (
                       <Image
                         key={index}
-                        className={`border-2 rounded-full p-[3px] object-cover ${
-                          index === selectedDescription
+                        className={`border-2 rounded-full p-[3px] object-cover ${index === selectedDescription
                             ? 'border-green-500'
                             : 'border-gray-200'
-                        }`}
+                          }`}
                         onClick={() => setSelectedDescription(index)}
                         width={150}
                         height={150}

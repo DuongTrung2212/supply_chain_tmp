@@ -65,6 +65,7 @@ interface DetailHistoryType {
     email?: string;
     phone?: string;
     system_role?: string;
+    tx_hash?:string
   };
 }
 
@@ -85,6 +86,7 @@ interface TransactionType {
     phone?: string;
     system_role?: string;
   };
+  tx_hash?: string;
 }
 interface TopSellingType {
   Product?: {
@@ -137,6 +139,7 @@ interface ProductType {
   hashed_data?: string;
   product_status?: string;
   product_type?: string;
+  tx_hash?: string;
   detail_description?: [
     {
       id?: string;
@@ -155,6 +158,7 @@ interface ProductType {
     full_name?: string;
     address_wallet?: string;
     system_role?: string;
+    tx_hash?: string
   };
 }
 interface StatisticalSystemType {

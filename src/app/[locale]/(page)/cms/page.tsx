@@ -1,5 +1,5 @@
-'use client';
-import React, { memo, useEffect, useState } from 'react';
+"use client";
+import React, { memo, useEffect, useState } from "react";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -8,30 +8,26 @@ import {
   RightCircleTwoTone,
   TeamOutlined,
   UserOutlined,
-} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import GeneralInformation from '@/components/CMS/GeneralInformation';
-import ChangPassword from '@/components/CMS/ChangePassword';
-import ProductCMS from '@/components/CMS/Product';
-import TransactionCMS from '@/components/CMS/Transaction';
-import { useAppSelector } from '@/hooks';
-import { useRouter } from 'next/navigation';
-import ManageUser from '@/components/CMS/Admin/ManageUser';
-import ManageProduct from '@/components/CMS/Admin/ManageProduct';
-import Statistical from '@/components/CMS/Statistical';
-import { useEffectOnce } from 'usehooks-ts';
+} from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { Breadcrumb, Layout, Menu, theme } from "antd";
+import GeneralInformation from "@/components/CMS/GeneralInformation";
+import ChangPassword from "@/components/CMS/ChangePassword";
+import ProductCMS from "@/components/CMS/Product";
+import TransactionCMS from "@/components/CMS/Transaction";
+import { useAppSelector } from "@/hooks";
+import { useRouter } from "next/navigation";
+import ManageUser from "@/components/CMS/Admin/ManageUser";
+import ManageProduct from "@/components/CMS/Admin/ManageProduct";
+import Statistical from "@/components/CMS/Statistical";
+import { useEffectOnce } from "usehooks-ts";
+import TransactionStatus from "@/components/CMS/TransactionStatus";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
+function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[]): MenuItem {
   return {
     key,
     icon,
@@ -42,9 +38,7 @@ function getItem(
 
 export default memo(function CMSPage() {
   const [collapsed, setCollapsed] = useState(false);
-  const [currentPage, setCurrentPage] = useState(
-    Number(localStorage.getItem('page'))
-  );
+  const [currentPage, setCurrentPage] = useState(Number(localStorage.getItem("page")));
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -52,26 +46,27 @@ export default memo(function CMSPage() {
 
   ////Render taskbar
   const items: MenuItem[] = [
-    getItem(<p>Thống kê</p>, '1', <PieChartOutlined />),
-    getItem('Thông tin của bạn', 'sub1', <UserOutlined />, [
-      getItem(<p>Thông tin chung</p>, '2'),
-      getItem(<p>Đổi mật khẩu</p>, '3'),
-      getItem(<p>Liên kết</p>, '4'),
+    getItem(<p>Thống kê</p>, "1", <PieChartOutlined />),
+    getItem("Thông tin của bạn", "sub1", <UserOutlined />, [
+      getItem(<p>Thông tin chung</p>, "2"),
+      getItem(<p>Đổi mật khẩu</p>, "3"),
+      getItem(<p>Liên kết</p>, "4"),
     ]),
-    currentUser.user.system_role !== 'ADMIN'
-      ? getItem('Sản phẩm', 'sub2', <TeamOutlined />, [
-          getItem(<p>Quản lí sản phâm</p>, '5'),
-          getItem(<p>Lịch sử giao dịch</p>, '6'),
-        ])
+    currentUser.user.system_role !== "ADMIN"
+      ? getItem("Sản phẩm", "sub2", <TeamOutlined />, [
+        getItem(<p>Quản lí sản phâm</p>, "5"),
+        getItem(<p>Lịch sử giao dịch</p>, "6"),
+        getItem(<p>Trạng thái giao dịch sản phẩm</p>, "7"),
+      ])
       : null,
     // getItem('Files'
 
-    currentUser.user.system_role === 'ADMIN'
-      ? getItem('Admin', 'sub3', <TeamOutlined />, [
-          // getItem('Thống kê hệ thống', '6'),
-          getItem(<p>Quản lí user</p>, '7'),
-          // getItem('Quản lí sản phẩm', '8'),
-        ])
+    currentUser.user.system_role === "ADMIN"
+      ? getItem("Admin", "sub3", <TeamOutlined />, [
+        // getItem('Thống kê hệ thống', '6'),
+        getItem(<p>Quản lí user</p>, "8"),
+        // getItem('Quản lí sản phẩm', '8'),
+      ])
       : null,
     // getItem('Files', '8', <FileOutlined />),
   ];
@@ -82,13 +77,13 @@ export default memo(function CMSPage() {
     <></>,
     <ProductCMS key={4} />,
     <TransactionCMS key={5} />,
-
-    currentUser.user.system_role === 'ADMIN'
+    <TransactionStatus key={6} />,
+    currentUser.user.system_role === "ADMIN"
       ? [
-          // <div key={6}>asa</div>,
-          <ManageUser key={6} />,
-          // <ManageProduct key={8} />,
-        ]
+        // <div key={6}>asa</div>,
+        <ManageUser key={7} />,
+        // <ManageProduct key={8} />,
+      ]
       : null,
   ];
 
@@ -98,19 +93,19 @@ export default memo(function CMSPage() {
         <Layout className="w-full">
           <Sider
             className="relative"
-            theme={'light'}
+            theme={"light"}
             // collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
           >
             <Menu
-              theme={'light'}
+              theme={"light"}
               defaultSelectedKeys={[currentPage.toString()]}
               mode="inline"
               items={items}
               onSelect={(e) => {
                 setCurrentPage(Number(e.key));
-                localStorage.setItem('page', e.key);
+                localStorage.setItem("page", e.key);
               }}
             />
             <div
