@@ -620,7 +620,7 @@ export default memo(function Header() {
           <Modal
             open={showModal}
             // width={currentForm === 'REGISTER' ? 1000 : 520}
-            className="backdrop-blur-sm	"
+            className="rounded-3xl backdrop-blur-sm"
             centered
             onCancel={() => {
               setShowModal(false);
@@ -634,14 +634,14 @@ export default memo(function Header() {
             )}
             {currentForm === "FORGET" && <ForgetForm onFinishOTP={onFinishOTP} />}
             <div className=" m-auto flex justify-around	max-w-[300px]">
-              <p onClick={() => setCurrentForm("FORGET")}>Forget?</p>
-              <p
+              <a className="text-[16px]" onClick={() => setCurrentForm("FORGET")}>Forget?</a>
+              <a className="text-[16px]"
                 onClick={() =>
                   currentForm === "LOGIN" ? setCurrentForm("REGISTER") : setCurrentForm("LOGIN")
                 }
               >
                 {currentForm === "LOGIN" ? "Register" : "Login"}
-              </p>
+              </a>
             </div>
           </Modal>
         </ConfigProvider>
