@@ -1,11 +1,20 @@
-import instanceAxios from "@/api/instanceAxios";
-import { useAppSelector } from "@/hooks";
-import { faL } from "@fortawesome/free-solid-svg-icons";
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography, notification } from "antd";
-import { CompoundedComponent } from "antd/es/float-button/interface";
-import { ReactNode, useEffect, useState } from "react";
-import { useSWRConfig } from "swr";
-import { useEffectOnce } from "usehooks-ts";
+import instanceAxios from '@/api/instanceAxios';
+import { useAppSelector } from '@/hooks';
+import { faL } from '@fortawesome/free-solid-svg-icons';
+import {
+  Button,
+  ConfigProvider,
+  Form,
+  FormProps,
+  Input,
+  InputNumber,
+  Typography,
+  notification,
+} from 'antd';
+import { CompoundedComponent } from 'antd/es/float-button/interface';
+import { ReactNode, useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
+import { useEffectOnce } from 'usehooks-ts';
 
 export const CheckoutForm = ({
   form = {},
@@ -48,23 +57,24 @@ export const CheckoutForm = ({
     // console.log(e);
     await instanceAxios
       .put(
-        `product/${producId}/purchase?price=${priceTotal}&quantity=${valueQuantity}&receiver=${receiver}&phone_number=${phone}&address=${address}${cartId ? `&cart_id=${cartId}` : ``
+        `product/${producId}/purchase?price=${priceTotal}&quantity=${valueQuantity}&receiver=${receiver}&phone_number=${phone}&address=${address}${
+          cartId ? `&cart_id=${cartId}` : ``
         }`
       )
       .then((res) => {
         notification.success({
-          message: "Mua hàng thành công",
-          description: "Bạn có thể xem lại đơn hàng ở trang thông tin",
+          message: 'Mua hàng thành công',
+          description: 'Bạn có thể xem lại đơn hàng ở trang thông tin',
         });
         onSuccess?.();
-        cartId && mutate("cart/list");
+        cartId && mutate('cart/list');
 
         useForm.resetFields();
       })
       .catch((err) => {
         notification.error({
-          message: "Mua hàng thất bại",
-          description: "Bạn có thể vui lòng xem lại thông tin",
+          message: 'Mua hàng thất bại',
+          description: 'Bạn có thể vui lòng xem lại thông tin',
         });
       })
       .finally(() => setLoading(false));
@@ -84,7 +94,7 @@ export const CheckoutForm = ({
       </Typography.Title>
       <Form.Item initialValue={valueQuantity} label="Số lượng bán">
         <InputNumber
-          addonBefore={"Số lượng"}
+          addonBefore={'Số lượng'}
           onChange={(e) => {
             setPriceTotal((e || 0) * price);
             setValueQuantity(e || 0);
@@ -92,10 +102,10 @@ export const CheckoutForm = ({
           value={valueQuantity}
           min={0}
           max={quantity}
-        // formatter={(value) =>
-        //   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        // }
-        // disabled
+          // formatter={(value) =>
+          //   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+          // }
+          // disabled
         />
       </Form.Item>
       <Form.Item initialValue={priceTotal} label="Tổng giá trị">
@@ -105,27 +115,29 @@ export const CheckoutForm = ({
               Input: {},
             },
             token: {
-              colorBgContainerDisabled: "#ffffff",
-              colorTextDisabled: "#5d5d5d",
+              colorBgContainerDisabled: '#ffffff',
+              colorTextDisabled: '#5d5d5d',
             },
           }}
         >
           <InputNumber
             value={priceTotal}
-            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            addonAfter={"USD"}
+            formatter={(value) =>
+              `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+            addonAfter={'USD'}
             disabled
           />
         </ConfigProvider>
       </Form.Item>
       <Form.Item
         label="Tên người nhận"
-        name={"receiver"}
+        name={'receiver'}
         initialValue={currentUser.username}
         rules={[
           {
             required: true,
-            message: "Please choose your name",
+            message: 'Please choose your name',
           },
         ]}
       >
@@ -133,12 +145,12 @@ export const CheckoutForm = ({
       </Form.Item>
       <Form.Item
         label="Số điện thoại"
-        name={"phone"}
+        name={'phone'}
         initialValue={currentUser.phone}
         rules={[
           {
             required: true,
-            message: "Please input your phone number",
+            message: 'Please input your phone number',
           },
         ]}
       >
@@ -146,11 +158,11 @@ export const CheckoutForm = ({
       </Form.Item>
       <Form.Item
         label="Địa chỉ nhận hàng"
-        name={"address"}
+        name={'address'}
         rules={[
           {
             required: true,
-            message: "Please input your address",
+            message: 'Please input your address',
           },
         ]}
       >
@@ -159,16 +171,16 @@ export const CheckoutForm = ({
 
       <Form.Item className="w-full">
         <div className="w-full flex justify-around items-center">
-          <button
+          <Button
             // onClick={() => setOrderType('BUY')}
             className="rounded-lg font-semibold transition relative text-white w-36 h-10 overflow-hidden cursor-pointer text-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500"
             disabled={!!!quantity || loading}
-            type="submit"
-          // loading={loading}
-          // htmlType="submit"
+            // type="submit"
+            loading={loading}
+            htmlType="submit"
           >
             Xác nhận
-          </button>
+          </Button>
         </div>
       </Form.Item>
     </Form>

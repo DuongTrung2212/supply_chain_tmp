@@ -27,6 +27,7 @@ import CommentInput from '../../common/CommentInput';
 import instanceAxios from '@/api/instanceAxios';
 import useSWR from 'swr';
 import currency from '@/services/currency';
+import staticVariables from '@/static';
 
 const { Meta } = Card;
 
@@ -148,7 +149,13 @@ export default function ProductItem(props: Props) {
                 props.product?.user?.avatar ||
                 props.order_type ? (
                   <div className="flex mt-[10px] items-center">
-                    <Avatar size={50} src={props.product?.user?.avatar} />
+                    <Avatar
+                      size={50}
+                      src={
+                        props.product?.user?.avatar ||
+                        staticVariables.noImage.src
+                      }
+                    />
                     <div className="ml-[10px]">
                       <p className="font-normal text-xs mr-[10px]">
                         {props.product?.user?.username}

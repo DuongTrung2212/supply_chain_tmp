@@ -16,6 +16,10 @@
   },
   "notification": {
     "PRODUCT_NOTIFICATION": "sản phẩm được",
+    "PRODUCT_NOT_EXIST": "Sản phẩm không tồn tại",
+    "TRANSACTION_NOT_FOUND": "Giao dịch không tồn tại",
+    "TRANSACTION_SF_NOT_FOUND": "Giao dịch không tồn tại",
+    "TRANSACTION_FM_NOT_FOUND": "Giao dịch không tồn tại",
     "ERROR_OWNER_NOT_FOUND ": "",
     "ERROR_PRODUCT_NOT_EXIST ": "",
     "ERROR_LESSON_NOT_EXIST ": "",

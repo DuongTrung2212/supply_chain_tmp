@@ -21,6 +21,7 @@ interface TransactionType {
   quantity?: number;
   created_at?: string;
   updated_at?: string;
+  status?: string;
   product?: {
     id?: string;
     product_type?: string;
@@ -124,10 +125,16 @@ export default function TransactionCMS() {
       title: 'Trạng thái',
       dataIndex: '',
       render: (value, record, index) =>
-        record.price || 0 % 2 ? (
+        record.status === 'DONE' ? (
           <Tag color={'success'}>Thành công</Tag>
         ) : (
-          <Tag color={'error'}>Thất bại</Tag>
+          <>
+            {record.status === 'PENDING' ? (
+              <Tag color={'warning'}>Chờ xác nhận</Tag>
+            ) : (
+              <Tag color={'error'}>Thất bại</Tag>
+            )}
+          </>
         ),
     },
   ];

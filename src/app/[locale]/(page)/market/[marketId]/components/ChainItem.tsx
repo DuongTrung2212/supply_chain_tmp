@@ -1,3 +1,4 @@
+import staticVariables from '@/static';
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Col, Row, Tooltip } from 'antd';
@@ -14,7 +15,9 @@ export default function ChainItem({
     <Row className="px-[10px] py-[15px] border-[1px]">
       <Col span={2}>
         <div>
-          <Avatar src={data.product?.user?.avatar || ''} />
+          <Avatar
+            src={data.product?.user?.avatar || staticVariables.noImage.src}
+          />
         </div>
       </Col>
       <Col span={4}>
@@ -39,10 +42,17 @@ export default function ChainItem({
       <Col span={4}>
         <Tooltip title={data.product?.user?.address_wallet}>
           <p className="pr-[10px] truncate">
-            {data.product?.user?.tx_hash && <a href={`https://goerli.arbiscan.io/tx/${data.product?.user?.tx_hash}`} target='_blank'>
-            <FontAwesomeIcon icon={faUpRightFromSquare} style={{color: "#000"}}/>
-            </a>
-              }
+            {data.product?.user?.tx_hash && (
+              <a
+                href={`https://goerli.arbiscan.io/tx/${data.product?.user?.tx_hash}`}
+                target="_blank"
+              >
+                <FontAwesomeIcon
+                  icon={faUpRightFromSquare}
+                  style={{ color: '#000' }}
+                />
+              </a>
+            )}
           </p>
         </Tooltip>
       </Col>

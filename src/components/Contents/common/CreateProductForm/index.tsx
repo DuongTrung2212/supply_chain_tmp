@@ -139,8 +139,10 @@ export default function CreateProductForm({
       .finally(() => setLoading(false));
   };
   return (
-    <div className='w-full'>
-      <Form layout='vertical' className='w-full'
+    <div className="w-full">
+      <Form
+        layout="vertical"
+        className="w-full"
         form={form}
         // labelCol={{ span: 10 }}
         // wrapperCol={{ span: 14 }}
@@ -151,29 +153,51 @@ export default function CreateProductForm({
           name="name"
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
-          <Input className='h-10 text-[18px] w-full' placeholder='Nhập tên sản phẩm'/>
+          <Input
+            className="h-10 text-[18px] w-full"
+            placeholder="Nhập tên sản phẩm"
+          />
         </Form.Item>
         <Form.Item<FormType>
           label="Mô tả sản phẩm"
           name="description"
           // rules={[{ required: true, message: 'Please input your username!' }]}
         >
-          <TextArea className='h-10 text-[18px] w-full' placeholder='Nhập mô tả sản phẩm'/>
+          <TextArea
+            className="h-10 text-[18px] w-full"
+            placeholder="Nhập mô tả sản phẩm"
+          />
         </Form.Item>
-        <Form.Item<FormType>
-          label="Số lượng bán"
-          name="quantity"
-          rules={[{ required: true, message: 'Please input your username!' }]}
-        >
-          <InputNumber min={0} className='h-10 text-[18px] w-full' placeholder='Nhập số lượng sản phẩm'/>
-        </Form.Item>
-        <Form.Item<FormType>
-          label="Giá bán"
-          name="price"
-          rules={[{ required: true, message: 'Please input your username!' }]}
-        >
-          <InputNumber min={0} className='h-10 text-[18px] w-full' placeholder='Nhập giá bán của từng sản phẩm'/>
-        </Form.Item>
+        {currentUser.system_role !== 'FARMER' && (
+          <>
+            <Form.Item<FormType>
+              label="Số lượng bán"
+              name="quantity"
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                className="h-10 text-[18px] w-full"
+                placeholder="Nhập số lượng sản phẩm"
+              />
+            </Form.Item>
+            <Form.Item<FormType>
+              label="Giá bán"
+              name="price"
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                className="h-10 text-[18px] w-full"
+                placeholder="Nhập giá bán của từng sản phẩm"
+              />
+            </Form.Item>
+          </>
+        )}
         <Form.Item<FormType>
           label="Ảnh chính của sản phẩm"
           valuePropName="fileList"
@@ -197,7 +221,7 @@ export default function CreateProductForm({
           </Upload>
         </Form.Item>
 
-        <Form.Item className='flex text-center justify-center'>
+        <Form.Item className="flex text-center justify-center">
           <Button loading={loading} htmlType="submit">
             Submit
           </Button>

@@ -8,10 +8,12 @@ import {
   faSquarePlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Col, Image, Row, Segmented, Tag } from 'antd';
+import { Avatar, Col, Image, Row, Segmented, Tag, notification } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
+import { useTranslations } from 'next-intl';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
 
 interface Product {
   id: string;
@@ -75,11 +77,14 @@ export default function TransactionStatus() {
   const [limit, setLimit] = useState(10);
   const [transactionTotal, setTransactionTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const tNotification = useTranslations('notification');
   const [listTransaction, setListTransaction] = useState<TransactionType[]>([]);
+  const { mutate } = useSWRConfig();
 
   const fetchDataTransaction = useCallback(async () => {
     setLoading(true);
-    await instanceAxios.get(`product/order_product/get?skip=${skip - 1}&limit=${limit}`)
+    await instanceAxios
+      .get(`product/order_product/get?skip=${skip - 1}&limit=${limit}`)
       .then((res) => {
         console.log(res.data.data.list_transaction_sf);
         setTransactionTotal(res.data.data.total_transaction);
@@ -94,14 +99,35 @@ export default function TransactionStatus() {
   useEffect(() => {
     fetchDataTransaction();
   }, [fetchDataTransaction]);
-  const updateStatusTransaction =async (status:string) => {
-    await instanceAxios.get(``)
-  }
+  useSWR('product/order_product/get', fetchDataTransaction);
+  const updateStatusTransaction = async (
+    status: string,
+    record: TransactionType
+  ) => {
+    await instanceAxios
+      .put(
+        `product/${record.product_id}/confirm_order?transaction_id=${record.id}&status=${status}`
+      )
+      .then((err) => {
+        notification.success({
+          message: 'Thành công',
+          description: `Đã ${status} đơn hàng ${record.product.name}`,
+        });
+        mutate('product/order_product/get');
+      })
+      .catch((err) => {
+        console.log(err);
+        notification.error({
+          message: 'Thất bại',
+          description: 'Thao tác thất bại',
+        });
+      });
+  };
   const columns: ColumnsType<TransactionType> = [
     {
       title: 'Tên khách hàng',
       dataIndex: 'user.full_name',
-      render: (value, record, index) => record.user?.full_name
+      render: (value, record, index) => record.user?.full_name,
     },
     {
       title: 'Tên sản phẩm',
@@ -134,29 +160,40 @@ export default function TransactionStatus() {
       title: 'Trạng thái',
       dataIndex: 'status',
       render: (value, record, index) =>
-        record.status === "DONE" ? (
+        record.status === 'DONE' ? (
           <Tag color={'success'}>Thành công</Tag>
-        ) : (record.status === "PENDING" ? (
-            <Tag color={'warning'}>Đang chờ giao hàng</Tag>
-          ) : (
-            <Tag color={'error'}>Giao hàng không thành công</Tag>
-          )
+        ) : record.status === 'PENDING' ? (
+          <Tag color={'warning'}>Đang chờ giao hàng</Tag>
+        ) : (
+          <Tag color={'error'}>Giao hàng không thành công</Tag>
         ),
     },
     {
       title: 'Cập nhật trạng thái',
-      render: (value, record, index) => (record.status==="PENDING" &&(
-        <div>
-          <Tag color={'success'} onClick={() => updateStatusTransaction("DONE")}>
-            Giao hàng thành công
-          </Tag>
-          <Tag color={'error'} onClick={() => updateStatusTransaction("REJECT")}>
-            Giao hàng thất bại 
-          </Tag>
-        </div>
-      )),
+      render: (value, record, index) =>
+        record.status === 'PENDING' ? (
+          <div className="flex gap-x-3">
+            <button
+              className="bg-red-200 text-[12px] text-red-700 p-[5px] border-[1px] border-red-500 rounded-lg"
+              color={'success'}
+              onClick={() => updateStatusTransaction('REJECT', record)}
+            >
+              Từ chối
+            </button>
+            <button
+              className="bg-green-200 text-[12px] text-green-700 p-[5px] border-[1px] border-green-500 rounded-lg"
+              color={'error'}
+              onClick={() => updateStatusTransaction('ACCEPT', record)}
+            >
+              Xác nhận
+            </button>
+          </div>
+        ) : record.status === 'REJECT' ? (
+          <Tag color={'error'}>Đã từ chối</Tag>
+        ) : (
+          <Tag color={'green'}>Đã hoàn thành</Tag>
+        ),
     },
-
   ];
   // const data: DataType[] = [];
   // for (let i = 0; i < 10; i++) {
