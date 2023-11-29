@@ -4,8 +4,8 @@
   },
   "header": {
     "route": {
-      "home": "Trang chủ",
-      "history": "Lịch sử",
+      "/": "Trang chủ",
+      "home": "Marketplace",
       "about":"About Us"
     }
   },

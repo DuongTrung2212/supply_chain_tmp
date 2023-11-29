@@ -64,7 +64,7 @@ export default memo(function CMSPage() {
       ? getItem('Sản phẩm', 'sub2', <TeamOutlined />, [
           getItem(<p>Quản lí sản phâm</p>, '5'),
           getItem(<p>Lịch sử giao dịch</p>, '6'),
-          getItem(<p>Trạng thái giao dịch sản phẩm</p>, '7'),
+          getItem(<p>Xác nhận đơn hàng</p>, '7'),
         ])
       : null,
     // getItem('Files'

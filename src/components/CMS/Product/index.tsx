@@ -159,7 +159,7 @@ export default memo(function ProductCMS() {
         currentUser.system_role === 'FARMER'
           ? 'transaction_sf'
           : 'transaction_fm'
-      }/list?skip=0&limit=100`
+      }/list?skip=0&limit=100&status=DONE`
     )
       .then((res) => {
         setListTransaction(

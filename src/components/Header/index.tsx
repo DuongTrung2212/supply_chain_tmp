@@ -1,5 +1,5 @@
-"use client";
-import staticVariables from "@/static";
+'use client';
+import staticVariables from '@/static';
 import {
   Avatar,
   Badge,
@@ -21,27 +21,35 @@ import {
   Space,
   message,
   notification,
-} from "antd";
-import Link from "next/link";
-import { deleteCookie, getCookie } from "cookies-next";
-import React, { ChangeEvent, ReactNode, memo, useCallback, useEffect, useRef, useState } from "react";
-import Login from "./Login";
-import Register from "./Register";
-import { useDebounce, useEffectOnce, useOnClickOutside } from "usehooks-ts";
-import { usePathname as pathLanguage, useRouter } from "next-intl/client";
-import { useLocale } from "next-intl";
-import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import useSWR, { useSWRConfig } from "swr";
+} from 'antd';
+import Link from 'next/link';
+import { deleteCookie, getCookie } from 'cookies-next';
+import React, {
+  ChangeEvent,
+  ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import Login from './Login';
+import Register from './Register';
+import { useDebounce, useEffectOnce, useOnClickOutside } from 'usehooks-ts';
+import { usePathname as pathLanguage, useRouter } from 'next-intl/client';
+import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import useSWR, { useSWRConfig } from 'swr';
 import {
   FieldTimeOutlined,
   GroupOutlined,
   HomeOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
-} from "@ant-design/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowRightFromBracket,
   faCartShopping,
@@ -50,22 +58,22 @@ import {
   // faUser,
   faUserGear,
   faWallet,
-} from "@fortawesome/free-solid-svg-icons";
-import { logOut, setLogin } from "@/reducers/userSlice";
-import SearchItem from "./SearchItem";
-import instanceAxios from "@/api/instanceAxios";
-import { setshowFormLogin } from "@/reducers/showFormSlice";
-import ForgetForm from "./Register/ForgetForm";
-import { Inter } from "next/font/google";
-import { faBell, faUser } from "@fortawesome/free-regular-svg-icons";
-import NotificationItem from "./NotificationItem";
-import moment from "moment";
-import "moment/locale/vi";
-import currency from "@/services/currency";
-import CartItem from "./CartItem";
-import { CheckoutForm } from "../Contents/common/CheckoutForm";
+} from '@fortawesome/free-solid-svg-icons';
+import { logOut, setLogin } from '@/reducers/userSlice';
+import SearchItem from './SearchItem';
+import instanceAxios from '@/api/instanceAxios';
+import { setshowFormLogin } from '@/reducers/showFormSlice';
+import ForgetForm from './Register/ForgetForm';
+import { Inter } from 'next/font/google';
+import { faBell, faUser } from '@fortawesome/free-regular-svg-icons';
+import NotificationItem from './NotificationItem';
+import moment from 'moment';
+import 'moment/locale/vi';
+import currency from '@/services/currency';
+import CartItem from './CartItem';
+import { CheckoutForm } from '../Contents/common/CheckoutForm';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export default memo(function Header() {
   // const [user, setUser] = useState(false);
@@ -76,19 +84,23 @@ export default memo(function Header() {
   const [showSearchItems, setShowSearchItems] = useState(false);
   const [loadingBuy, setLoadingBuy] = useState(false);
 
-  const [currentForm, setCurrentForm] = useState<"LOGIN" | "REGISTER" | "FORGET">("LOGIN");
+  const [currentForm, setCurrentForm] = useState<
+    'LOGIN' | 'REGISTER' | 'FORGET'
+  >('LOGIN');
   const [dataHeader, setDataHeader] = useState({});
-  const [valueSearch, setValueSearch] = useState("");
+  const [valueSearch, setValueSearch] = useState('');
   const [resultSearch, setResultSearch] = useState<MarketType[]>([]);
   const [listCart, setListCart] = useState<CartItemType[]>([]);
-  const [listNotifications, setListNotifications] = useState<NotificationItemType[]>([]);
+  const [listNotifications, setListNotifications] = useState<
+    NotificationItemType[]
+  >([]);
   const [listUnreadNotifications, setListUnreadNotifications] = useState(0);
   // const [totalNotifications, setTotalNotifications] = useState(0);
   const debouncedValue = useDebounce<string>(valueSearch, 300);
   const { mutate } = useSWRConfig();
 
   const router = useRouter();
-  const t = useTranslations("header");
+  const t = useTranslations('header');
   const pathname = pathLanguage();
   const path = usePathname();
   const locale = useLocale();
@@ -110,15 +122,16 @@ export default memo(function Header() {
     <QuestionCircleOutlined key={4} />,
   ];
 
-  const isHomePage = path === "/" + (locale === "vi" ? "" : locale);
+  const isHomePage = path === '/' + (locale === 'vi' ? '' : locale);
   useEffect(() => {
     // Sử dụng hàm async IIFE để lấy dữ liệu từ tệp dịch vụ (JSON)
     const fetchData = async () => {
       try {
-        const messages = (await import(`../../../messages/${locale}.json`)).default;
+        const messages = (await import(`../../../messages/${locale}.json`))
+          .default;
         setDataHeader(messages.header);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu:", error);
+        console.error('Lỗi khi lấy dữ liệu:', error);
         setDataHeader({}); // Xử lý lỗi nếu cần thiết
       }
     };
@@ -128,7 +141,7 @@ export default memo(function Header() {
 
   const fethGetUser = useCallback(async () => {
     await instanceAxios
-      .get("user/me")
+      .get('user/me')
       .then((res) => {
         // console.log(res.data.data);
         dispatch(setLogin({ logged: true, user: { ...res.data.data } }));
@@ -174,15 +187,15 @@ export default memo(function Header() {
       )
       .then((res) => {
         notification.success({
-          message: "Mua hàng thành công",
-          description: "Bạn có thể xem lại đơn hàng ở trang thông tin",
+          message: 'Mua hàng thành công',
+          description: 'Bạn có thể xem lại đơn hàng ở trang thông tin',
         });
-        mutate("cart/list");
+        mutate('cart/list');
       })
       .catch((err) => {
         notification.error({
-          message: "Mua hàng thất bại",
-          description: "Bạn có thể vui lòng xem lại thông tin",
+          message: 'Mua hàng thất bại',
+          description: 'Bạn có thể vui lòng xem lại thông tin',
         });
       })
       .finally(() => setLoadingBuy(false));
@@ -190,7 +203,7 @@ export default memo(function Header() {
 
   useEffect(() => {
     if (showFormLogin) {
-      setCurrentForm("LOGIN");
+      setCurrentForm('LOGIN');
       setShowModal(true);
     }
   }, [showFormLogin]);
@@ -207,29 +220,29 @@ export default memo(function Header() {
     fetchNotifications();
   }, [logged]);
 
-  useSWR("cart/list", fethListCart);
-  useSWR("user/me", fethGetUser);
-  useSWR("notifications/list", fetchNotifications);
+  useSWR('cart/list', fethListCart);
+  useSWR('user/me', fethGetUser);
+  useSWR('notifications/list', fetchNotifications);
 
   const handleChangeLanguage = () => {
-    router.replace(pathname, { locale: locale === "vi" ? "en" : "vi" });
+    router.replace(pathname, { locale: locale === 'vi' ? 'en' : 'vi' });
   };
   const onFinishOTP = () => {
-    setCurrentForm("LOGIN");
+    setCurrentForm('LOGIN');
   };
   const handleShowModal = () => {
-    mutate("notifications/list");
+    mutate('notifications/list');
     setShowModal(false);
   };
   const handleLogout = async () => {
     // const access = getCookie('access_token');
     delete instanceAxios.defaults.headers.common.Authorization;
     dispatch(logOut());
-    deleteCookie("access_token");
+    deleteCookie('access_token');
     // router.push('/');
     // setShowModal(true);
-    setCurrentForm("LOGIN");
-    mutate("user/me");
+    setCurrentForm('LOGIN');
+    mutate('user/me');
   };
 
   const ref = useRef(null);
@@ -237,23 +250,31 @@ export default memo(function Header() {
   const contentNotifications = (
     <div className="max-h-[500px] overflow-auto">
       {listNotifications.length ? (
-        listNotifications.map((item, index) => <NotificationItem key={index} {...item} />)
+        listNotifications.map((item, index) => (
+          <NotificationItem key={index} {...item} />
+        ))
       ) : (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Chưa có thông báo nào"} />
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={'Chưa có thông báo nào'}
+        />
       )}
     </div>
   );
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
       label: (
         <Link href={`/user/${currentUser.id}`}>
-          <Space className="py-[10px] font-medium text-[16px] space-x-3 px-[5px] rounded-xl" wrap={false}>
-            <FontAwesomeIcon icon={faUser} style={{ color: "#3c64aa" }} />
+          <Space
+            className="py-[10px] font-medium text-[16px] space-x-3 px-[5px] rounded-xl"
+            wrap={false}
+          >
+            <FontAwesomeIcon icon={faUser} style={{ color: '#3c64aa' }} />
             <p>Thông tin</p>
           </Space>
         </Link>
       ),
-      key: "0",
+      key: '0',
     },
     // {
     //   label: (
@@ -286,12 +307,15 @@ export default memo(function Header() {
     // },
     {
       label: (
-        <Space className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl" wrap={false}>
-          <FontAwesomeIcon icon={faWallet} style={{ color: "#4096ff" }} />
+        <Space
+          className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+          wrap={false}
+        >
+          <FontAwesomeIcon icon={faWallet} style={{ color: '#4096ff' }} />
           <p>{`${currentUser.account_balance} ${currency}`}</p>
         </Space>
       ),
-      key: "1",
+      key: '1',
     },
     // {
     //   label: (
@@ -315,39 +339,48 @@ export default memo(function Header() {
     // },
     {
       label: (
-        <Link href={"/cms"}>
-          <Space className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl" wrap={false}>
-            <FontAwesomeIcon icon={faUserGear} style={{ color: "#376ecd" }} />
+        <Link href={'/cms'}>
+          <Space
+            className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+            wrap={false}
+          >
+            <FontAwesomeIcon icon={faUserGear} style={{ color: '#376ecd' }} />
             <p>Quản lí</p>
           </Space>
         </Link>
       ),
-      key: "3",
+      key: '3',
     },
     {
       label:
-        currentUser.system_role === "MEMBER" ? (
+        currentUser.system_role === 'MEMBER' ? (
           <Link
             // className="py-[10px] px-[5px] font-medium text-[16px] space-x-3 rounded-xl"
-            href={"/register-rule"}
+            href={'/register-rule'}
           >
-            <Space className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl" wrap={false}>
+            <Space
+              className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+              wrap={false}
+            >
               <FontAwesomeIcon icon={faUser} />
               <p>Đăng kí thành viên</p>
             </Space>
           </Link>
         ) : (
-          ""
+          ''
         ),
-      key: "4",
+      key: '4',
     },
     {
-      type: "divider",
+      type: 'divider',
     },
     {
       label: (
         <div onClick={handleLogout}>
-          <Space className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl" wrap={false}>
+          <Space
+            className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+            wrap={false}
+          >
             <FontAwesomeIcon
               // className="mr-[10px]"
               icon={faArrowRightFromBracket}
@@ -356,19 +389,25 @@ export default memo(function Header() {
           </Space>
         </div>
       ),
-      key: "5",
+      key: '5',
     },
   ];
   return (
     <div
       data-aos="fade-down"
       data-aos-duration="1500"
-      className={`w-full	text-black ${isHomePage ? " bg-transparent" : "bg-[#2db457]"
-        } bg-white fixed z-50 flex lg:py-1.5 items-center border-b-[1px] justify-between backdrop-blur-[50px] pl-5 pr-10 height-fit
+      className={`w-full	text-black ${
+        isHomePage ? ' bg-transparent' : 'bg-[#2db457]'
+      } bg-white fixed z-50 flex lg:py-1.5 items-center border-b-[1px] justify-between backdrop-blur-[50px] pl-5 pr-10 height-fit
       ${inter.className} `}
     >
-      <Link href={"/"}>
-        <Avatar size={50} className={`object-cover scale-[1.8]`} src={staticVariables.logoDurian.src} alt="" />
+      <Link href={'/'}>
+        <Avatar
+          size={50}
+          className={`object-cover scale-[1.8]`}
+          src={staticVariables.logoDurian.src}
+          alt=""
+        />
       </Link>
       <div className={`flex`}>
         {Object.keys((dataHeader as any).route || {}).map((key, index) => (
@@ -378,13 +417,18 @@ export default memo(function Header() {
             href={`/${key}`}
           >
             {/* {listIcon[index]} */}
-            <p className={`text-inherit font-medium font-sans`}>{t(`route.${key}`)}</p>
+            <p className={`text-inherit font-medium font-sans`}>
+              {t(`route.${key}`)}
+            </p>
           </Link>
         ))}
       </div>
       <div className="relative w-1/4">
         <Popover
-          title={<p className=" w-full truncate">{`Kết quả tìm kiếm: ${debouncedValue}`}</p>}
+          getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
+          title={
+            <p className=" w-full truncate">{`Kết quả tìm kiếm: ${debouncedValue}`}</p>
+          }
           className="w-full"
           content={
             <div ref={ref} className="w-full max-h-[400px] overflow-y-auto">
@@ -397,13 +441,16 @@ export default memo(function Header() {
                   />
                 ))
               ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_DEFAULT} description={"Ko tìm thấy kết quả"} />
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_DEFAULT}
+                  description={'Ko tìm thấy kết quả'}
+                />
               )}
             </div>
           }
           open={showSearchItems}
           // trigger={'focus'}
-          placement={"bottom"}
+          placement={'bottom'}
         >
           <input
             // tabIndex={1}
@@ -443,7 +490,11 @@ export default memo(function Header() {
           }}
         >
           <Space className="w-fit bg-[#1212120A] hover:bg-[#ececec] px-[20px] py-[10px] rounded-lg mr-[20px]">
-            <FontAwesomeIcon size="1x" icon={faEarthAsia} style={{ color: "#3748c8" }} />
+            <FontAwesomeIcon
+              size="1x"
+              icon={faEarthAsia}
+              style={{ color: '#3748c8' }}
+            />
             <Select
               defaultValue={locale}
               style={{ width: 100 }}
@@ -451,10 +502,10 @@ export default memo(function Header() {
               bordered={false}
               // dropdownStyle={isHomePage ? { background: '#363636FF' } : {}}
               className={`text-inherit `}
-              size={"small"}
+              size={'small'}
               options={[
-                { value: "vi", label: "Tiếng Việt" },
-                { value: "en", label: "English" },
+                { value: 'vi', label: 'Tiếng Việt' },
+                { value: 'en', label: 'English' },
               ]}
             />
           </Space>
@@ -463,23 +514,28 @@ export default memo(function Header() {
         {logged ? (
           <div className="flex items-center space-x-5">
             <Popover
+              getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
               title="Thông báo của bạn"
-              placement={"bottomLeft"}
-              trigger={["click"]}
+              placement={'bottomLeft'}
+              trigger={['click']}
               content={contentNotifications}
             >
               <div className="bg-[#1212120A] hover:bg-[#ececec] px-[20px] py-[10px] rounded-lg">
                 {listUnreadNotifications ? (
-                  <Badge count={listUnreadNotifications} offset={[16, -8]} color="blue">
+                  <Badge
+                    count={listUnreadNotifications}
+                    offset={[16, -8]}
+                    color="blue"
+                  >
                     <FontAwesomeIcon
-                      size={"1x"}
+                      size={'1x'}
                       className=""
                       icon={faBell}
-                      style={{ color: "#20249d" }}
+                      style={{ color: '#20249d' }}
                     />
                   </Badge>
                 ) : (
-                  <FontAwesomeIcon icon={faBell} style={{ color: "#20249d" }} />
+                  <FontAwesomeIcon icon={faBell} style={{ color: '#20249d' }} />
                 )}
               </div>
             </Popover>
@@ -487,7 +543,7 @@ export default memo(function Header() {
             <Dropdown
               getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
               menu={{ items }}
-              placement={"bottom"}
+              placement={'bottom'}
             >
               {/* {listUnreadNotifications ? (
                 <Badge
@@ -500,7 +556,7 @@ export default memo(function Header() {
               ) : ( */}
               <div className="bg-[#1212120A] hover:bg-[#ececec]  px-[20px] py-[10px] rounded-lg">
                 {/* <Avatar src={currentUser.avatar} size={20} /> */}
-                <FontAwesomeIcon icon={faUser} style={{ color: "#000000" }} />
+                <FontAwesomeIcon icon={faUser} style={{ color: '#000000' }} />
               </div>
               {/* )} */}
             </Dropdown>
@@ -524,17 +580,23 @@ export default memo(function Header() {
               </Space>
             </ConfigProvider>
             <Modal
-              style={{ float: "right", margin: "10px" }}
+              style={{ float: 'right', margin: '10px' }}
               onCancel={() => setShowCartModal(false)}
               centered
-              title={<p className="text-[20px] py-[10px] font-semibold">Your cart</p>}
+              title={
+                <p className="text-[20px] py-[10px] font-semibold">Your cart</p>
+              }
               open={showCartModal}
               footer={[]}
             >
               <div className="flex flex-col pr-[10px] w-full">
                 <div className="flex justify-between mb-[20px]">
-                  <p className="text-[16px] font-semibold">{listCart.length} items</p>
-                  {listCart.length && <p className="text-[14px] font-semibold">Clear all</p>}
+                  <p className="text-[16px] font-semibold">
+                    {listCart.length} items
+                  </p>
+                  {listCart.length && (
+                    <p className="text-[14px] font-semibold">Clear all</p>
+                  )}
                 </div>
                 <div className="max-h-[360px] overflow-y-auto w-full flex flex-col">
                   {listCart.length ? (
@@ -543,7 +605,7 @@ export default memo(function Header() {
                         <Radio key={index} value={index}>
                           <div className="w-[410px]">
                             <CartItem
-                              onDeleteSuccess={() => mutate("cart/list")}
+                              onDeleteSuccess={() => mutate('cart/list')}
                               active={valueRadioCart === index}
                               key={index}
                               data={item}
@@ -564,7 +626,8 @@ export default memo(function Header() {
                     <p className="text-[16px] font-bold">Total price</p>
                     <div className="flex flex-col">
                       <p className="text-[16px] font-semibold">
-                        {listCart[valueRadioCart]?.product?.price || 0} {currency}
+                        {listCart[valueRadioCart]?.product?.price || 0}{' '}
+                        {currency}
                       </p>
                       <p className="text-[14px]">
                         {listCart[valueRadioCart]?.price || 0} {currency}
@@ -588,16 +651,18 @@ export default memo(function Header() {
                     >
                       <CheckoutForm
                         buyQuantity={listCart[valueRadioCart]?.quantity || 0}
-                        producId={listCart[valueRadioCart]?.product?.id || ""}
+                        producId={listCart[valueRadioCart]?.product?.id || ''}
                         price={listCart[valueRadioCart]?.product?.price || 0}
-                        quantity={listCart[valueRadioCart]?.product?.quantity || 0}
+                        quantity={
+                          listCart[valueRadioCart]?.product?.quantity || 0
+                        }
                         cartId={listCart[valueRadioCart]?.id}
                         onSuccess={() => {
                           mutate(`marketplace/id`);
                         }}
-                        receiver={""}
-                        phone={""}
-                        address={""}
+                        receiver={''}
+                        phone={''}
+                        address={''}
                       />
                     </Modal>
                   </div>
@@ -606,14 +671,17 @@ export default memo(function Header() {
             </Modal>
           </div>
         ) : (
-          <div className={`text-inherit'} cursor-pointer`} onClick={() => setShowModal(true)}>
+          <div
+            className={`text-inherit'} cursor-pointer`}
+            onClick={() => setShowModal(true)}
+          >
             Đăng nhập
           </div>
         )}
         <ConfigProvider
           theme={{
             token: {
-              colorBgElevated: "rgba(255, 255, 255, 0.75)",
+              colorBgElevated: 'rgba(255, 255, 255, 0.75)',
             },
           }}
         >
@@ -628,19 +696,29 @@ export default memo(function Header() {
             }}
             footer={[]}
           >
-            {currentForm === "LOGIN" && <Login onFinish={handleShowModal} />}
-            {currentForm === "REGISTER" && (
+            {currentForm === 'LOGIN' && <Login onFinish={handleShowModal} />}
+            {currentForm === 'REGISTER' && (
               <Register onFinishOTP={onFinishOTP} onFinish={handleShowModal} />
             )}
-            {currentForm === "FORGET" && <ForgetForm onFinishOTP={onFinishOTP} />}
+            {currentForm === 'FORGET' && (
+              <ForgetForm onFinishOTP={onFinishOTP} />
+            )}
             <div className=" m-auto flex justify-around	max-w-[300px]">
-              <a className="text-[16px]" onClick={() => setCurrentForm("FORGET")}>Forget?</a>
-              <a className="text-[16px]"
+              <a
+                className="text-[16px]"
+                onClick={() => setCurrentForm('FORGET')}
+              >
+                Forget?
+              </a>
+              <a
+                className="text-[16px]"
                 onClick={() =>
-                  currentForm === "LOGIN" ? setCurrentForm("REGISTER") : setCurrentForm("LOGIN")
+                  currentForm === 'LOGIN'
+                    ? setCurrentForm('REGISTER')
+                    : setCurrentForm('LOGIN')
                 }
               >
-                {currentForm === "LOGIN" ? "Register" : "Login"}
+                {currentForm === 'LOGIN' ? 'Register' : 'Login'}
               </a>
             </div>
           </Modal>
