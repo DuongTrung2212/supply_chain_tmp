@@ -131,6 +131,7 @@ interface ProductType {
   banner?: string;
   created_by?: string;
   description?: string;
+  view?: string;
   created_at?: string;
   price?: number;
   is_sale?: boolean;

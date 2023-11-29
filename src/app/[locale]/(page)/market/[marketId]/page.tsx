@@ -449,16 +449,24 @@ export default function MarketInfo({
                     </p>
                   </div>
                   <div className="p-[20px]">
-                    <div>
-                      <p>Giá sản phẩm</p>
-                      <p className="text-[30px] tracking-widest	  font-[600]">
-                        {`${dataProduct.price || 0} ${currency}`}
-                      </p>
+                    <div className="flex items-center space-x-20">
+                      <div className="items-center">
+                        <p>Giá sản phẩm</p>
+                        <p className="text-[30px] tracking-widest font-[600]">
+                          {`${dataProduct.price || 0} ${currency}`}
+                        </p>
+                      </div>
+                      <div className="items-center">
+                        <p>Sản phẩm hiện còn</p>
+                        <p className="text-[30px] tracking-widest font-[600]">
+                          {`${dataProduct.quantity || 0}`}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-2 py-[10px] font-medium text-gray-600">
-                      <p>{`Sản phẩm hiện còn:`}</p>
+                      <p>{`Tổng số lượng ghé thăm:`}</p>
                       <p className="font-bold  text-[20px]">
-                        {dataProduct.quantity || 0}
+                        {dataProduct.view || 0}
                       </p>
                     </div>
                     <div className="flex items-center space-x-10">
