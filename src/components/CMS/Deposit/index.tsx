@@ -1,3 +1,4 @@
+import instanceAxios from '@/api/instanceAxios';
 import {
   faEnvelope,
   faMap,
@@ -5,10 +6,38 @@ import {
   faRightLong,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Input } from 'antd';
-import React from 'react';
+import { Input, Select, message } from 'antd';
+import { redirect, useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 export default function Deposit() {
+  const [cost, setCost] = useState(0);
+  const [bank, setBank] = useState('SCB');
+  const route = useRouter();
+
+  const fetchDeposit = async () => {
+    if (!cost) {
+      message.success('Vui lòng chọn số tiền');
+    }
+    await instanceAxios
+      .post(`payment?amount=${cost}&bank_code=${bank}&language=vn`)
+      .then((res) => {
+        // console.log(res.data);
+        route.push(`${res.data}`);
+        // message.success('Nạp tiền thành công');
+      })
+      .catch((err) => message.error('Nạp tiền thật bại'));
+  };
+  const options = [
+    {
+      label: 'SCB - Ngân hàng Sacombank',
+      value: 'SCB',
+    },
+    {
+      label: 'VISA',
+      value: 'VISA',
+    },
+  ];
   return (
     <div className="w-full">
       <p className="text-[25px] text-center font-bold">Nạp tiền bằng VNpay</p>
@@ -34,30 +63,53 @@ export default function Deposit() {
       <div className="w-2/3  m-auto">
         <div className="w-full p-[20px] border-[1px] rounded-xl bg-[#f9f9f9]">
           <div className="w-full flex">
-            <div className="w-2/3">
+            <div className="w-2/3 cursor-pointer">
               <p className="text-[20px] font-bold py-[20px]">
                 Vui lòng chọn số tiền
               </p>
               <div className="w-full flex flex-wrap gap-5">
-                <p className="w-2/5 bg-white p-[10px] shadow-lg text-center font-bold rounded-xl">
+                <p
+                  onClick={() => setCost(100000)}
+                  className={`w-2/5 ${
+                    cost === 100000 && 'shadow-yellow-300'
+                  } bg-white p-[10px] shadow-lg text-center font-bold rounded-xl`}
+                >
                   100.000 đ
                 </p>
-                <p className="w-2/5 bg-white p-[10px] shadow-lg text-center font-bold rounded-xl">
-                  100.000 đ
+                <p
+                  onClick={() => setCost(200000)}
+                  className={`w-2/5 ${
+                    cost === 200000 && 'shadow-yellow-300'
+                  } bg-white p-[10px] shadow-lg text-center font-bold rounded-xl`}
+                >
+                  200.000 đ
                 </p>
-                <p className="w-2/5 bg-white p-[10px] shadow-lg text-center font-bold rounded-xl">
-                  100.000 đ
+                <p
+                  onClick={() => setCost(500000)}
+                  className={`w-2/5 ${
+                    cost === 500000 && 'shadow-yellow-300'
+                  } bg-white p-[10px] shadow-lg text-center font-bold rounded-xl`}
+                >
+                  500.000 đ
                 </p>
-                <p className="w-2/5 bg-white p-[10px] shadow-lg text-center font-bold rounded-xl">
-                  100.000 đ
+                <p
+                  onClick={() => setCost(1000000)}
+                  className={`w-2/5 ${
+                    cost === 1000000 && 'shadow-yellow-300'
+                  } bg-white p-[10px] shadow-lg text-center font-bold rounded-xl`}
+                >
+                  1000.000 đ
                 </p>
               </div>
             </div>
             <div className="w-1/3">
               <p className="text-[20px] font-bold py-[20px]">Nhập số khác</p>
               <input
+                type={'number'}
+                onChange={(e) => setCost(Number(e.target.value))}
+                min={0}
                 placeholder="Vui lòng nhập số tiền..."
-                className="p-[10px] px-[20px] shadow-lg rounded-xl"
+                className="p-[10px] px-[20px] shadow-lg outline-none rounded-xl"
               />
             </div>
           </div>
@@ -71,7 +123,31 @@ export default function Deposit() {
                   <p>Ngân hàng thụ hưởng</p>
                   <p className="text-red-800">*</p>
                 </div>
-                <p className=" font-bold">MB - Ngân hàng TMCP Quân đội</p>
+                <select
+                  defaultValue={bank}
+                  className="outline-none mt-[5px] font-bold"
+                >
+                  {options.map((item, index) => (
+                    <option
+                      className="my-[50px] block font-bold"
+                      key={index}
+                      value={item.value}
+                    >
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+                {/* <Select
+                  className="font-bold w-[300px]"
+                  defaultValue="MBBANK"
+                  style={{ width: 120 }}
+                  bordered={false}
+                  options={[
+                    { value: 'MBBANK', label: 'MB - Ngân hàng TMCP Quân đội' },
+                    { value: 'lucy', label: 'Lucy' },
+                    { value: 'Yiminghe', label: 'yiminghe' },
+                  ]}
+                /> */}
               </div>
             </div>
             <div className="w-full">
@@ -83,12 +159,22 @@ export default function Deposit() {
                   <p>Ngôn ngữ</p>
                   <p className="text-red-800">*</p>
                 </div>
-                <p className=" font-bold">Việt Nam</p>
+                <select className="outline-none mt-[5px] font-bold">
+                  <option className="my-[50px] block font-bold" value={'vi'}>
+                    Tiếng Việt
+                  </option>
+                  <option className="my-[50px] block font-bold" value={'en'}>
+                    Tiếng Anh
+                  </option>
+                </select>
               </div>
             </div>
           </div>
         </div>
-        <p className="w-fit rounded-lg font-semibold text-white p-[10px] float-right my-[20px]  bg-[#337aee]">
+        <p
+          onClick={fetchDeposit}
+          className="w-fit rounded-lg font-semibold text-white p-[10px] float-right my-[20px]  bg-[#337aee]"
+        >
           Hoàn tất nạp tiền
         </p>
       </div>
