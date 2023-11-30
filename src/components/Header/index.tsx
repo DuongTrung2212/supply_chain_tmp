@@ -43,6 +43,7 @@ import { usePathname } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import useSWR, { useSWRConfig } from 'swr';
 import {
+  BorderBottomOutlined,
   FieldTimeOutlined,
   GroupOutlined,
   HomeOutlined,
@@ -696,15 +697,18 @@ export default memo(function Header() {
         )}
         <ConfigProvider
           theme={{
+            components:{},
             token: {
-              colorBgElevated: 'rgba(255, 255, 255, 0.75)',
+              colorBgElevated: "rgba(255, 255, 255, 0.75)",
+              borderRadiusLG: 24,
             },
           }}
         >
-          <Modal
+          <Modal 
             open={showModal}
             // width={currentForm === 'REGISTER' ? 1000 : 520}
-            className="rounded-3xl backdrop-blur-sm"
+            className="backdrop-blur-sm"
+            style={{borderRadius: '20px'}}
             centered
             onCancel={() => {
               setShowModal(false);
