@@ -18,6 +18,7 @@ import user_farmer from '../public/cms/user_farmer.png';
 import user_seed from '../public/cms/user_seed.png';
 import register_rule from '../public/register_rule.png';
 import noImage from '../public/profile.png';
+import profile from '../public/profile.svg';
 
 // import factory from '../public/cms/factory.png';
 // import factory from '../public/cms/factory.png';
@@ -44,5 +45,6 @@ const staticVariables = {
   user_seed,
   register_rule,
   noImage,
+  profile,
 };
 export default staticVariables;
