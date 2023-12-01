@@ -670,17 +670,14 @@ export default memo(function Header() {
                         buyQuantity={listCart[valueRadioCart]?.quantity || 0}
                         producId={listCart[valueRadioCart]?.product?.id || ''}
                         price={listCart[valueRadioCart]?.product?.price || 0}
-                        quantity={
-                          listCart[valueRadioCart]?.product?.quantity || 0
-                        }
+                        quantity={listCart[valueRadioCart]?.product?.quantity || 0}
                         cartId={listCart[valueRadioCart]?.id}
                         onSuccess={() => {
                           mutate(`marketplace/id`);
-                        }}
+                        } }
                         receiver={''}
                         phone={''}
-                        address={''}
-                      />
+                        address={''} type_id={''}                      />
                     </Modal>
                   </div>
                 </div>

@@ -125,6 +125,24 @@ interface CartItemType {
     system_role?: string;
   };
 }
+
+interface ClassifyGoods{
+  id: string;
+  product_id: string;
+  data: {
+    [key: string]: CountPrice;
+  };
+}
+
+interface ClassifyGoodsData {
+  [key: string]: CountPrice;
+}
+
+interface CountPrice {
+  quantity?: number;
+  price?: number;
+}
+
 interface ProductType {
   id?: string;
   name?: string;
@@ -163,6 +181,7 @@ interface ProductType {
     system_role?: string;
     tx_hash?: string;
   };
+  classify_goods?: ClassifyGoods[];
 }
 interface StatisticalSystemType {
   statistical_user?: {

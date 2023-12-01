@@ -119,6 +119,7 @@ export default function MarketInfo({
   const [dataMarket, setDataMarket] = useState<MarketType>({});
   const [dataOwner, setDataOwner] = useState<UserType>({});
   const [dataProduct, setDataProduct] = useState<ProductType>({});
+  const [countPrice, setCountPrice] = useState<CountPrice>({});
   const [dataHistory, setDataHistory] = useState<HistoryType>({});
   const [dataChart, setDataChart] = useState({});
   const [dataGrowUp, setDataGrowUp] = useState<GrowUpType[]>([]);
@@ -133,6 +134,8 @@ export default function MarketInfo({
   const [selectedDescription, setSelectedDescription] = useState(0);
   const [commentList, setCommentList] = useState<CommentItemType[]>([]);
   const [showModalPay, setShowModalPay] = useState(false);
+  const [typeId, setTypeId] = useState<string>();
+  console.log("product type", dataProduct);
   const currentUser = useAppSelector((state) => state.user.user);
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
@@ -266,8 +269,7 @@ export default function MarketInfo({
   const fetchDataComment = async () => {
     await instanceAxios
       .get(
-        `comments/list?marketplace_id=${
-          params.marketId
+        `comments/list?marketplace_id=${params.marketId
         }&skip=${0}&limit=${1000}`
       )
       .then((res) => {
@@ -348,6 +350,11 @@ export default function MarketInfo({
     background: '#364d79',
     borderRadius: '10px',
   };
+
+  const handleOnClickButtonTypeProduct = (typeId: string, classifyGoods: CountPrice) => {
+    setCountPrice(classifyGoods);
+    setTypeId(typeId);
+  }
 
   const columns: ColumnsType<TransactionType> = [
     {
@@ -443,23 +450,30 @@ export default function MarketInfo({
                 <div className="select-none	rounded-xl w-full mt-[20px] border-[1px] border-gray-300">
                   <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
                     <FieldTimeOutlined className="text-[20px]" />
-                    <p className="text-[16px] tracking-wider">
-                      Ngày đăng bán:{' '}
-                      {moment(dataMarket.created_at).format('LLL')}
-                    </p>
+                    {dataProduct.product_type !== "FARMER" ? (
+                      <p className="text-[16px] tracking-wider">
+                        Ngày đăng bán:{' '}
+                        {moment(dataMarket.created_at).format('LLL')}
+                      </p>
+                    ) : (
+                      dataProduct.classify_goods?.map((item) => (
+                        Object.entries(item.data).map(([key, countPrice]) => (
+                          <Button key={key} onClick={()=>{handleOnClickButtonTypeProduct(key, countPrice)}}>{key}</Button>
+                        )
+                        ))))}
                   </div>
                   <div className="p-[20px]">
                     <div className="flex items-center space-x-20">
                       <div className="items-center">
                         <p>Giá sản phẩm</p>
                         <p className="text-[30px] tracking-widest font-[600]">
-                          {`${dataProduct.price || 0} ${currency}`}
+                          {`${countPrice.price ||dataProduct.price || 0} ${currency}`}
                         </p>
                       </div>
                       <div className="items-center">
                         <p>Sản phẩm hiện còn</p>
                         <p className="text-[30px] tracking-widest font-[600]">
-                          {`${dataProduct.quantity || 0}`}
+                          {`${countPrice.quantity||dataProduct.quantity || 0}`}
                         </p>
                       </div>
                     </div>
@@ -539,8 +553,8 @@ export default function MarketInfo({
                               buyQuantity
                                 ? fetchAddCartItem()
                                 : notification.error({
-                                    message: 'Vui lòng chọn số lượng',
-                                  });
+                                  message: 'Vui lòng chọn số lượng',
+                                });
                             })
                           }
                           className="w-1/5 text-center bg-[#2081E1] py-[12px]"
@@ -559,7 +573,7 @@ export default function MarketInfo({
                     >
                       <CheckoutForm
                         producId={dataProduct?.id || ''}
-                        price={dataProduct.price || 0}
+                        price={countPrice.price||dataProduct.price || 0}
                         quantity={dataProduct.quantity || 0}
                         buyQuantity={buyQuantity}
                         onSuccess={() => {
@@ -569,7 +583,8 @@ export default function MarketInfo({
                         }}
                         receiver={''}
                         phone={''}
-                        address={''}
+                          address={''}
+                          type_id={typeId || ""}
                       />
                     </Modal>
                   </div>
@@ -710,18 +725,18 @@ export default function MarketInfo({
                 {((dataMarket.order_type !== 'SEEDLING_COMPANY' &&
                   dataHistory.transactions_sf) ||
                   dataHistory.transactions_fm) && (
-                  <ProductOrigin
-                    originType={
-                      dataMarket.order_type === 'SEEDLING_COMPANY'
-                        ? 'seed'
-                        : 'provider'
-                    }
-                    transactions={
-                      dataHistory.transactions_sf || dataHistory.transactions_fm
-                    }
-                    {...dataHistory}
-                  />
-                )}
+                    <ProductOrigin
+                      originType={
+                        dataMarket.order_type === 'SEEDLING_COMPANY'
+                          ? 'seed'
+                          : 'provider'
+                      }
+                      transactions={
+                        dataHistory.transactions_sf || dataHistory.transactions_fm
+                      }
+                      {...dataHistory}
+                    />
+                  )}
               </>
             )}
             {dataMarket.order_type === 'FARMER' && (
@@ -763,11 +778,10 @@ export default function MarketInfo({
                     {dataProduct.detail_description?.map((item, index) => (
                       <Image
                         key={index}
-                        className={`border-2 rounded-full p-[3px] object-cover ${
-                          index === selectedDescription
-                            ? 'border-green-500'
-                            : 'border-gray-200'
-                        }`}
+                        className={`border-2 rounded-full p-[3px] object-cover ${index === selectedDescription
+                          ? 'border-green-500'
+                          : 'border-gray-200'
+                          }`}
                         onClick={() => setSelectedDescription(index)}
                         width={150}
                         height={150}
