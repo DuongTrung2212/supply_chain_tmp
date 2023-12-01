@@ -364,23 +364,23 @@ export default function Statistical() {
       {/*<Chart />*/}
       {currentUser.system_role !== 'ADMIN' && (
         <div className={'w-full flex gap-5 mt-10'}>
-          <div className="w-[50%] bg-[#f6f6f6] rounded-3xl border p-5">
+          <div className="w-[50%] bg-[#fdfdfd] rounded-3xl border p-5">
             <div className="flex items-center justify-center gap-2">
               <FontAwesomeIcon
                 width={36}
                 height={36}
-                className="w-8 h-8"
+                className="w-8 h-8 text-[#1b8c0c]"
                 icon={faClipboardList}
               />
               <h2 className={'font-bold text-2xl text-center'}>
-                {' '}
                 Nội dung thông báo
               </h2>
             </div>
 
-            <div className="mt-4 flex flex-col gap-1">
+            <div className="mt-4 flex flex-col gap-1 ">
               {notifications?.map((item, index) => (
                 <ItemNotification
+                  data={item}
                   message={item?.data?.message as string}
                   createAt={item?.data?.data?.created_at as any}
                   key={index}
@@ -389,7 +389,7 @@ export default function Statistical() {
             </div>
           </div>
 
-          <div className="w-[50%] bg-[#f6f6f6] items-center border justify-center gap-2 rounded-3xl p-5">
+          <div className="w-[50%] bg-[#fdfdfd] items-center border justify-center gap-2 rounded-3xl p-5">
             <div className="flex items-center justify-center gap-2">
               <FontAwesomeIcon
                 width={36}

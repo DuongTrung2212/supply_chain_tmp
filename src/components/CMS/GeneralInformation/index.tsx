@@ -123,7 +123,9 @@ export default function GeneralInformation() {
   const textLabel = 'text-[#757f90]';
   return (
     <div>
-      <p className="text-[30px] font-semibold">Thông tin</p>
+      <p className="text-[30px] bg-[#f8f8f8] w-fit px-[20px] mb-[20px] border-2 border-[#d6d6d6] py-[10px] rounded-xl font-semibold">
+        Thông tin cá nhân
+      </p>
       <div className="flex">
         <div className="w-2/3">
           <div className="relative w-fit mr-[50px]">
@@ -321,11 +323,12 @@ export default function GeneralInformation() {
             </div>
           </div>
           <div className="flex mt-[200px] justify-between px-[50px]">
-            <div className="w-2/5">
+            <div className="w-full  ">
               <Typography.Title level={4}>Giới thiệu bản thân</Typography.Title>
               <TextAreaCustom
                 name="description"
-                initialValue=""
+                passType="body"
+                initialValue={currentUser.description || ''}
                 APIurl={'user/update_me'}
                 queryType={'user'}
               />

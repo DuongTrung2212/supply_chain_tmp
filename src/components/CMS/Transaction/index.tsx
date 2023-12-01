@@ -169,6 +169,7 @@ export default function TransactionCMS() {
         <p className="text-3xl font-medium	">Danh sách sản phẩm</p>
       </div>
       <Segmented
+        className="my-[20px]"
         size={'large'}
         defaultValue={currentTable}
         onChange={(e) => setCurrentTable(e.toString())}

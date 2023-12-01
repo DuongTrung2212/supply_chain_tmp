@@ -258,9 +258,9 @@ export default function MarketInfo({
       });
     // .finally(() => setLoading(false));
   };
-  // useEffectOnce(() => {
-  //   fethMarket();
-  // });
+  useEffectOnce(() => {
+    fethMarket();
+  });
   useSWR(`marketplace/id`, fethMarket);
 
   const fetchDataComment = async () => {

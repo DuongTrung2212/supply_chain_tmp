@@ -148,9 +148,9 @@ export default memo(function Header() {
       })
       .catch((err) => console.log(err));
   }, [dispatch]);
-  // useEffectOnce(() => {
-  //   fethGetUser();
-  // });
+  useEffectOnce(() => {
+    fethGetUser();
+  });
 
   const fetchNotifications = async () => {
     await instanceAxios
