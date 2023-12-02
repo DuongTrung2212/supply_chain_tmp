@@ -41,21 +41,21 @@ export default function LocaleLayout({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
   const cookie = getCookie('access_token');
   const route = useRouter();
-  useEffect(() => {
-    const channel = pusher.subscribe('general-channel');
-    channel.bind(currentUser.user.id || '', (data: NotificationType) => {
-      message.info('Bạn vừa có thông báo mới');
-      if (data.params.notification_type === 'COMMENT_NOTIFICATION') {
-        mutate(`comments/list?marketplace_id=${data.params.marketplace_id}`);
-      }
-      mutate('notifications/list');
-      console.log(data);
-    });
+  // useEffect(() => {
+  //   const channel = pusher.subscribe('general-channel');
+  //   channel.bind(currentUser.user.id || '', (data: any) => {
+  //     message.info('Bạn vừa có thông báo mới');
+  //     if (data?.params?.notification_type === 'COMMENT_NOTIFICATION') {
+  //       mutate(`comments/list?marketplace_id=${data?.params?.marketplace_id}`);
+  //     }
+  //     mutate('notifications/list');
+  //     console.log(data);
+  //   });
 
-    return () => {
-      pusher.unsubscribe('general-channel');
-    };
-  }, [currentUser, mutate]);
+  //   return () => {
+  //     pusher.unsubscribe('general-channel');
+  //   };
+  // }, [currentUser, mutate]);
   useEffect(() => {
     if (!cookie) {
       route.push('/');

@@ -72,6 +72,7 @@ import 'moment/locale/vi';
 import currency from '@/services/currency';
 import CartItem from './CartItem';
 import { CheckoutForm } from '../Contents/common/CheckoutForm';
+import { pusher } from '@/app/[locale]/(page)/layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -138,6 +139,21 @@ export default memo(function Header() {
 
     fetchData();
   }, [locale]);
+
+  useEffect(() => {
+    const channel = pusher.subscribe('general-channel');
+    channel.bind(currentUser.id || '', (data: any) => {
+      if (data?.params?.notification_type === 'COMMENT_NOTIFICATION') {
+        mutate(`comments/list?marketplace_id=${data?.params?.marketplace_id}`);
+      }
+      mutate('notifications/list');
+      console.log(data);
+    });
+
+    return () => {
+      pusher.unsubscribe('general-channel');
+    };
+  }, [currentUser, mutate]);
 
   const fethGetUser = useCallback(async () => {
     await instanceAxios

@@ -10,7 +10,7 @@ type Props = {
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
-import { SWRConfig } from 'swr';
+import { SWRConfig, useSWRConfig } from 'swr';
 import instanceAxios from '@/api/instanceAxios';
 import { getCookie } from 'cookies-next';
 import Pusher from 'pusher-js';
@@ -26,19 +26,28 @@ library.add(fas);
 // Since we have a `not-found.tsx` page on the root, a layout file
 // is required, even if it's just passing children through.
 export default function RootLayout({ children }: Props) {
+  const { mutate } = useSWRConfig();
   useEffect(() => {
     AOS.init();
   });
-  useEffect(() => {
-    const channel = pusher.subscribe('general-channel');
-    channel.bind('general-channel', (data: any) => {
-      console.log('Pusherrrrr', data);
-    });
+  // useEffect(() => {
+  //   const channel = pusher.subscribe('general-channel');
+  //   channel.bind('general-channel', (data: any) => {
+  //     console.log('Pusherrrrr', data);
 
-    return () => {
-      pusher.unsubscribe('general-channel');
-    };
-  }, []);
+  // try {
+  // if (data?.type === 'MESSENGER') {
+  //   mutate(`/messenger/${data?.sender_id}/list_messenger_detail`);
+  // }
+  // } catch (error) {
+  //   console.log('Pusherrrrr', error);
+  // }
+  // });
+
+  //   return () => {
+  //     pusher.unsubscribe('general-channel');
+  //   };
+  // }, []);
 
   return (
     <SWRConfig
