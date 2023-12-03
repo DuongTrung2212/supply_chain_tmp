@@ -19,9 +19,9 @@ import StyledComponentsRegistry from '../lib/AntdRegistry';
 import { Providers } from '@/providers';
 import { App } from 'antd';
 
-export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || '', // Replace with 'cluster' from dashboard
-});
+// export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
+//   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || '', // Replace with 'cluster' from dashboard
+// });
 library.add(fas);
 // Since we have a `not-found.tsx` page on the root, a layout file
 // is required, even if it's just passing children through.
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: Props) {
   // } catch (error) {
   //   console.log('Pusherrrrr', error);
   // }
-  // });
+  // });  
 
   //   return () => {
   //     pusher.unsubscribe('general-channel');

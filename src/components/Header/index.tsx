@@ -73,7 +73,7 @@ import 'moment/locale/vi';
 import currency from '@/services/currency';
 import CartItem from './CartItem';
 import { CheckoutForm } from '../Contents/common/CheckoutForm';
-import { pusher } from '@/app/[locale]/(page)/layout';
+import pusher from '@/services/pusher';
 
 const inter = Inter({ subsets: ['latin'] });
 

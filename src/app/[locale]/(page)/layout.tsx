@@ -31,9 +31,9 @@ interface NotificationType {
   };
 }
 
-export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || '', // Replace with 'cluster' from dashboard
-});
+// export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
+//   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || '', // Replace with 'cluster' from dashboard
+// });
 
 export default function LocaleLayout({ children }: { children: ReactNode }) {
   const currentUser = useAppSelector((state) => state.user);

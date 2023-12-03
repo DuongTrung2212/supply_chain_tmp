@@ -17,14 +17,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Drawer, FloatButton, Input, Modal, message } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import moment from 'moment';
-import Pusher from 'pusher-js';
 import { memo, useEffect, useState } from 'react';
 import CommentInput from '../Contents/common/CommentInput';
 import MessageItem from './MessageItem';
 import { useAppSelector } from '@/hooks';
 import useSWR, { mutate } from 'swr';
-import { pusher } from '@/app/[locale]/(page)/layout';
-import { log } from 'console';
+import pusher from '@/services/pusher';
+
 
 interface User {
   username: string;
