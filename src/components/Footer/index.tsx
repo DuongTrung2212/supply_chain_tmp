@@ -17,12 +17,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Drawer, FloatButton, Input, Modal, message } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import moment from 'moment';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import CommentInput from '../Contents/common/CommentInput';
 import MessageItem from './MessageItem';
-import { useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import useSWR, { mutate } from 'swr';
 import pusher from '@/services/pusher';
+import { closeMessage, openMessage } from '@/reducers/openMessageSilce';
 
 
 interface User {
@@ -75,6 +76,9 @@ interface Messenger {
 
 export default memo(function Footer() {
   const currentUser = useAppSelector((state) => state.user.user);
+  const currentReceive =  useAppSelector((state) => state.showMessage.currentReceiver)
+  const openMessageForm = useAppSelector((state) => state.showMessage.open);
+  const dispatch = useAppDispatch()
   const logged = useAppSelector((state) => state.user.logged);
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -85,7 +89,7 @@ export default memo(function Footer() {
   const [inforUser, setInforUser] = useState<string>('');
   const [valueInput, setValueInput] = useState('');
   const [dataMessage, setDataMessage] = useState<Messenger[]>([]);
-  const [currentReceive, setCurrentReceive] = useState<MessageData>();
+  // const [currentReceive, setCurrentReceive] = useState<MessageData>();
 
   const fetchDataUser = () => {
     instanceAxios
@@ -100,37 +104,37 @@ export default memo(function Footer() {
     fetchDataUser();
   }, [changeMessage, logged]);
 
-  const fetchDataListMessage = () => {
+  const fetchDataListMessage = useCallback(() => {
     instanceAxios
-      .get(`/messenger/${inforUser}/list_messenger_detail`)
+      .get(`/messenger/${currentReceive.id}/list_messenger_detail`)
       .then((res: any) => {
         setDataMessage(res?.data?.data?.list_messenger || []);
       })
       .catch((err) => console.log(err));
-  };
+  }, [currentReceive.id])
   useEffect(() => {
     if (!logged) setOpenMessageModal(false);
   }, [logged]);
 
   useEffect(() => {
-    if (!inforUser) return;
+    // if (!inforUser) return;
     fetchDataListMessage();
-  }, [inforUser, changeMessage]);
+  }, [fetchDataListMessage,changeMessage]);
 
   useEffect(() => {
     const channel = pusher.subscribe('general-channel');
     channel.bind(currentUser.id || '', (data: any) => {
       if (data?.type === 'MESSENGER') {
-        mutate(`/messenger/${data?.sender_id || ''}/list_messenger_detail`);
+        mutate(`/messenger/list_messenger_detail`);
       }
     });
 
     return () => {
       pusher.unsubscribe('general-channel');
     };
-  }, [currentUser, mutate]);
+  }, [currentUser]);
 
-  useSWR(`/messenger/${inforUser}/list_messenger_detail`, fetchDataListMessage);
+  useSWR(`/messenger/list_messenger_detail`, fetchDataListMessage);
 
   const fetchSubmitMessage = async () => {
     if (!valueInput.trim()) {
@@ -138,11 +142,12 @@ export default memo(function Footer() {
     } else {
       await instanceAxios
         .post(`messenger/create`, {
-          receiver_id: currentReceive?.user.user_id,
+          receiver_id: currentReceive?.id,
           content: valueInput,
         })
         .then((res) => {
           message.success('Đã nhắn tin');
+          mutate(`/messenger/list_messenger_detail`);
           setValueInput('');
           setChangeMessage(!changeMessage);
         })
@@ -258,10 +263,11 @@ export default memo(function Footer() {
         {dataUser?.map((item, index) => (
           <div
             onClick={() => {
-              setCurrentReceive(item);
+              // setCurrentReceive(item);
 
               setInforUser(item?.user?.user_id);
-              setOpenMessageModal(true);
+              // setOpenMessageModal(true);
+              dispatch(openMessage({id: item?.user.user_id, avatar: item?.user.avatar, username: item?.user.username}))
               setOpenDrawer(false);
             }}
             key={index}
@@ -291,21 +297,22 @@ export default memo(function Footer() {
           </div>
         ))}
       </Drawer>
-      {openMessageModal && (
+      {openMessageForm && (
         <div className="fixed bg-white border rounded-xl  w-[340px] bottom-2 right-20">
           <div className="flex justify-between border-b py-[10px] px-[20px]">
             <div className="flex items-center space-x-2">
               <div>
-                <Avatar size={'large'} src={currentReceive?.user.avatar} />
+                <Avatar size={'large'} src={currentReceive?.avatar} />
               </div>
               <p className="text-[18px]">
-                {currentReceive?.user.username ?? 'Loading...'}
+                {currentReceive?.username ?? 'Loading...'}
               </p>
             </div>
             <div
               className="cursor-pointer"
               onClick={() => {
                 setOpenMessageModal(false);
+                dispatch(closeMessage())
                 // setCurrentReceive({ avatar: '', name: '', id: '' });
                 // setInforUser('');
               }}

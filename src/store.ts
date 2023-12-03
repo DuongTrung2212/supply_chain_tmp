@@ -3,6 +3,7 @@ import counterSliceReducer from './reducers/counterSlice';
 import userReducer from './reducers/userSlice';
 import nextEventReducer from './reducers/nextEventSlice';
 import showFormReducer from './reducers/showFormSlice';
+import openMessageSliceReducer from './reducers/openMessageSilce';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     // comments: commentsReducer,
     user: userReducer,
     showForm: showFormReducer,
+    showMessage: openMessageSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

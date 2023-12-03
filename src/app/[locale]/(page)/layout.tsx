@@ -12,6 +12,7 @@ import { useSWRConfig } from 'swr';
 import Footer from '@/components/Footer';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
+import pusher from '@/services/pusher';
 // export function generateStaticParams() {
 //   return [{ locale: 'en' }, { locale: 'vi' }];
 // }
@@ -56,6 +57,19 @@ export default function LocaleLayout({ children }: { children: ReactNode }) {
   //     pusher.unsubscribe('general-channel');
   //   };
   // }, [currentUser, mutate]);
+  useEffect(() => {
+    const channel = pusher.subscribe('general-channel');
+    channel.bind(currentUser.user.id || '', (data: any) => {
+      if (data?.type === 'MESSENGER') {
+        mutate(`/messenger/list_messenger_detail`);
+      }
+    });
+
+    return () => {
+      pusher.unsubscribe('general-channel');
+    };
+  }, [currentUser, mutate]);
+
   useEffect(() => {
     if (!cookie) {
       route.push('/');

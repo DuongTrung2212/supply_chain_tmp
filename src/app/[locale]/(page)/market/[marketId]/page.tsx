@@ -88,7 +88,7 @@ import instanceAxios from '@/api/instanceAxios';
 import GrowUpForm from '@/components/Contents/ProductInfo/GrowUpForm';
 import TextAreaCustom from '@/components/Contents/common/InputCustom/TextAreaCustom';
 import InputCustom from '@/components/Contents/common/InputCustom/InputCustom';
-import { useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { useEffectOnce } from 'usehooks-ts';
 import CommentInput from '@/components/Contents/common/CommentInput';
 import moment from 'moment';
@@ -106,6 +106,8 @@ import currency from '@/services/currency';
 import Description from '@/components/Contents/ProductInfo/Description';
 import useLogin from '@/services/requireLogin';
 import ChainItem from './components/ChainItem';
+import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
+import { openMessage } from '@/reducers/openMessageSilce';
 
 export default function MarketInfo({
   params,
@@ -139,6 +141,7 @@ export default function MarketInfo({
   const currentUser = useAppSelector((state) => state.user.user);
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
+  const dispatch = useAppDispatch()
   console.log('list transaction:', dataListTransaction);
 
   ChartJS.register(
@@ -421,13 +424,17 @@ export default function MarketInfo({
               <div className="w-1/2 top-4/12 rounded">
                 <div className="w-full flex justify-between text-[30px] text-[#222222] font-semibold font-[Work Sans]">
                   <p>{dataProduct.name}</p>
-                  <div className="text-[20px] mr-[20px] space-x-8">
+                    <div className="text-[20px] mr-[20px] space-x-8">
+                      <FontAwesomeIcon onClick={() => {
+                        if (currentUser.id !== dataOwner.id)dispatch(openMessage({id: dataOwner.id, avatar: dataOwner.avatar, username: dataOwner.username}))
+                      }} icon={faFacebookMessenger} style={{ color: "#005eff", }} />
                     <ShareAltOutlined />
                     <EllipsisOutlined />
+                      {/* <FontAwesomeIcon icon={faFacebookMessenger} className='text-  ' /> */}
                   </div>
                 </div>
                 <div className="flex w-full gap-x-2 tetx-[16px] text-[#7B7B7B] font-light">
-                  Sản phẩm của
+                  Chủ sản phẩm
                   <Link
                     className="flex space-x-2 items-center"
                     href={`/user/${dataProduct.user?.id}`}
