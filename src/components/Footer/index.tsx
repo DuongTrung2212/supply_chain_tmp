@@ -24,6 +24,7 @@ import MessageItem from './MessageItem';
 import { useAppSelector } from '@/hooks';
 import useSWR, { mutate } from 'swr';
 import { pusher } from '@/app/[locale]/(page)/layout';
+import { log } from 'console';
 
 interface User {
   username: string;
@@ -75,6 +76,7 @@ interface Messenger {
 
 export default memo(function Footer() {
   const currentUser = useAppSelector((state) => state.user.user);
+  const logged = useAppSelector((state) => state.user.logged);
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openMessageModal, setOpenMessageModal] = useState(false);
@@ -84,11 +86,7 @@ export default memo(function Footer() {
   const [inforUser, setInforUser] = useState<string>('');
   const [valueInput, setValueInput] = useState('');
   const [dataMessage, setDataMessage] = useState<Messenger[]>([]);
-  const [userSender, setUserSender] = useState({
-    name: '',
-    avatar: '',
-    id: '',
-  });
+  const [currentReceive, setCurrentReceive] = useState<MessageData>();
 
   const fetchDataUser = () => {
     instanceAxios
@@ -101,7 +99,7 @@ export default memo(function Footer() {
 
   useEffect(() => {
     fetchDataUser();
-  }, []);
+  }, [changeMessage, logged]);
 
   const fetchDataListMessage = () => {
     instanceAxios
@@ -111,6 +109,9 @@ export default memo(function Footer() {
       })
       .catch((err) => console.log(err));
   };
+  useEffect(() => {
+    if (!logged) setOpenMessageModal(false);
+  }, [logged]);
 
   useEffect(() => {
     if (!inforUser) return;
@@ -138,7 +139,7 @@ export default memo(function Footer() {
     } else {
       await instanceAxios
         .post(`messenger/create`, {
-          receiver_id: userSender.id,
+          receiver_id: currentReceive?.user.user_id,
           content: valueInput,
         })
         .then((res) => {
@@ -232,14 +233,16 @@ export default memo(function Footer() {
           </div>
         </div>
       </div>
-      <FloatButton
-        badge={{ count: 2 }}
-        shape="square"
-        type="primary"
-        onClick={() => setOpenDrawer(true)}
-        style={{ right: 24 }}
-        icon={<MessageOutlined />}
-      />
+      {logged && (
+        <FloatButton
+          badge={{ count: 2 }}
+          shape="square"
+          type="primary"
+          onClick={() => setOpenDrawer(true)}
+          style={{ right: 24 }}
+          icon={<MessageOutlined />}
+        />
+      )}
 
       <Drawer
         title="Messenger"
@@ -256,11 +259,7 @@ export default memo(function Footer() {
         {dataUser?.map((item, index) => (
           <div
             onClick={() => {
-              setUserSender({
-                name: item?.user?.username,
-                avatar: item?.user?.avatar as string,
-                id: item?.user?.user_id as string,
-              });
+              setCurrentReceive(item);
 
               setInforUser(item?.user?.user_id);
               setOpenMessageModal(true);
@@ -293,81 +292,66 @@ export default memo(function Footer() {
           </div>
         ))}
       </Drawer>
-      <Modal
-        className="absolute bottom-30 right-20  top-[300px] h-[500px]"
-        width={340}
-        title={
-          <div className="flex justify-between">
+      {openMessageModal && (
+        <div className="fixed bg-white border rounded-xl  w-[340px] bottom-2 right-20">
+          <div className="flex justify-between border-b py-[10px] px-[20px]">
             <div className="flex items-center space-x-2">
               <div>
-                <Avatar size={'large'} src={userSender?.avatar} />
+                <Avatar size={'large'} src={currentReceive?.user.avatar} />
               </div>
-              <p className="text-[18px]">{userSender?.name ?? 'Loading...'}</p>
+              <p className="text-[18px]">
+                {currentReceive?.user.username ?? 'Loading...'}
+              </p>
             </div>
             <div
               className="cursor-pointer"
               onClick={() => {
                 setOpenMessageModal(false);
-                setUserSender({ avatar: '', name: '', id: '' });
-                setInforUser('');
+                // setCurrentReceive({ avatar: '', name: '', id: '' });
+                // setInforUser('');
               }}
             >
               <CloseOutlined />
             </div>
           </div>
-        }
-        closable={false}
-        cancelText={
-          <p
-            onClick={() => {
-              setOpenMessageModal(false);
-              setUserSender({ avatar: '', name: '', id: '' });
-              setInforUser('');
-            }}
-          >
-            x
-          </p>
-        }
-        open={openMessageModal}
-        footer={[]}
-      >
-        <div className="h-[300px] flex flex-col-reverse overflow-y-auto">
-          <div className="w-full pr-2">
-            {dataMessage?.map((item, index) => (
-              <MessageItem
-                key={index}
-                content={item?.content}
-                isOwner={currentUser.id === item.sender.id}
-              />
-            ))}
+          <div className="h-[300px] flex flex-col-reverse overflow-y-auto p-[20px]">
+            <div className="w-full pr-2">
+              {dataMessage?.map((item, index) => (
+                <MessageItem
+                  key={index}
+                  content={item?.content}
+                  isOwner={currentUser.id === item.sender.id}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-        {/* <CommentInput marketId="12" /> */}
-        <div>
-          <div className={`flex items-center mt-[20px]`}>
-            <div>
-              <Avatar
-                className="mr-[10px]"
-                size="large"
-                src={currentUser.avatar || staticVariables.noImage.src}
+          {/* <CommentInput marketId="12" /> */}
+          <div>
+            <div className={`flex items-center p-[20px] py-[10px] border-t`}>
+              <div>
+                <Avatar
+                  className="mr-[10px]"
+                  size="large"
+                  src={currentUser.avatar || staticVariables.noImage.src}
+                />
+              </div>
+              <Input.TextArea
+                autoSize
+                placeholder="Nhắn tin ..."
+                className="max-h-[300px]"
+                value={valueInput}
+                onChange={(e) => setValueInput(e.target.value)}
+              />
+              <SendOutlined
+                onClick={fetchSubmitMessage}
+                style={{ color: '#366ece' }}
+                size={30}
+                className="text-xl px-[10px]"
               />
             </div>
-            <Input.TextArea
-              autoSize
-              placeholder="Nhắn tin ..."
-              className="max-h-[300px]"
-              value={valueInput}
-              onChange={(e) => setValueInput(e.target.value)}
-            />
-            <SendOutlined
-              onClick={fetchSubmitMessage}
-              style={{ color: '#366ece' }}
-              size={30}
-              className="text-xl px-[10px]"
-            />
           </div>
         </div>
-      </Modal>
+      )}
     </div>
   );
 });

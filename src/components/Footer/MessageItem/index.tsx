@@ -23,7 +23,7 @@ export default function MessageItem(props: CommentItemType & Props) {
               <Avatar src={props.user?.avatar || staticVariables.noImage.src} />
             </div>
             <div
-              className={`flex ml-[10px] p-[8px] flex-col  ${
+              className={`flex p-[8px] flex-col  ${
                 props.isOwner
                   ? 'rounded-br-[10px] rounded-l-[10px] bg-[#0084ff] text-white'
                   : 'rounded-bl-[10px] rounded-r-[10px] bg-[#f0f2f5] text-black'
@@ -38,7 +38,7 @@ export default function MessageItem(props: CommentItemType & Props) {
             className={`flex ${
               props.isOwner
                 ? 'mr-[40px]  justify-end'
-                : 'ml-[50px] justify-start'
+                : 'ml-[40px] justify-start'
             }  mt-[5px] `}
           >
             <div className={`flex mt-1 text-[12px] text-[#65676b]`}>

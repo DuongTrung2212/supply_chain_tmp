@@ -111,8 +111,8 @@ export default function CreateProductForm({
     formData.append('banner', fileAvartar[0]?.originFileObj as Blob);
     await instanceAxios
       .post(
-        `product/create?name=${e.name}&price=${e.price||0}&quantity=${
-          e.quantity||0
+        `product/create?name=${e.name}&price=${e.price || 0}&quantity=${
+          e.quantity || 0
         }&description=${e.description}${
           transactionId ? `&transaction_id=${transactionId}` : ''
         }`,
@@ -151,7 +151,9 @@ export default function CreateProductForm({
         <Form.Item<FormType>
           label="Tên sản phẩm"
           name="name"
-          rules={[{ required: true, message: 'Please input your name product!' }]}
+          rules={[
+            { required: true, message: 'Please input your name product!' },
+          ]}
         >
           <Input
             className="h-10 text-[18px] w-full"
@@ -186,9 +188,7 @@ export default function CreateProductForm({
             <Form.Item<FormType>
               label="Giá bán"
               name="price"
-              rules={[
-                { required: true, message: 'Please input your price!' },
-              ]}
+              rules={[{ required: true, message: 'Please input your price!' }]}
             >
               <InputNumber
                 min={0}
