@@ -134,6 +134,7 @@ export default function MarketInfo({
   const [changePageRight, setChangePageRight] = useState('COMMENT');
   const [generalAndProvider, setGeneralAndProvider] = useState('GENERAL');
   const [isOwner, setIsOwner] = useState(false);
+  const [selectedProductMessage, setSelectedProductMessage] = useState('');
   const [selectedDescription, setSelectedDescription] = useState(0);
   const [commentList, setCommentList] = useState<CommentItemType[]>([]);
   const [showModalPay, setShowModalPay] = useState(false);
@@ -372,6 +373,7 @@ export default function MarketInfo({
   ) => {
     setCountPrice(classifyGoods);
     setTypeId(typeId);
+    setSelectedProductMessage(`Bạn vừa chọn loại sản phẩm ${typeId}`);
   };
 
   const columns: ColumnsType<TransactionType> = [
@@ -492,6 +494,11 @@ export default function MarketInfo({
                       dataProduct.classify_goods?.map((item) =>
                         Object.entries(item.data).map(([key, countPrice]) => (
                           <Button
+                            type="primary"
+                            style={{
+                              backgroundColor: '#2081e1',
+                              borderColor: '#2081e1',
+                            }}
                             key={key}
                             onClick={() => {
                               handleOnClickButtonTypeProduct(key, countPrice);
@@ -501,6 +508,11 @@ export default function MarketInfo({
                           </Button>
                         ))
                       )
+                    )}
+                    {dataProduct.product_type === 'FARMER' && (
+                      <p className="text-[red]">
+                        Vui lòng chọn loại sản phẩm !!!
+                      </p>
                     )}
                   </div>
                   <div className="p-[20px]">
