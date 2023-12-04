@@ -670,14 +670,18 @@ export default memo(function Header() {
                         buyQuantity={listCart[valueRadioCart]?.quantity || 0}
                         producId={listCart[valueRadioCart]?.product?.id || ''}
                         price={listCart[valueRadioCart]?.product?.price || 0}
-                        quantity={listCart[valueRadioCart]?.product?.quantity || 0}
+                        quantity={
+                          listCart[valueRadioCart]?.product?.quantity || 0
+                        }
                         cartId={listCart[valueRadioCart]?.id}
                         onSuccess={() => {
                           mutate(`marketplace/id`);
-                        } }
+                        }}
                         receiver={''}
                         phone={''}
-                        address={''} type_id={''}                      />
+                        address={''}
+                        type_id={''}
+                      />
                     </Modal>
                   </div>
                 </div>
@@ -694,18 +698,18 @@ export default memo(function Header() {
         )}
         <ConfigProvider
           theme={{
-            components:{},
+            components: {},
             token: {
-              colorBgElevated: "rgba(255, 255, 255, 0.75)",
+              colorBgElevated: 'rgba(255, 255, 255, 0.75)',
               borderRadiusLG: 24,
             },
           }}
         >
-          <Modal 
+          <Modal
             open={showModal}
             // width={currentForm === 'REGISTER' ? 1000 : 520}
             className="backdrop-blur-sm"
-            style={{borderRadius: '20px'}}
+            style={{ borderRadius: '20px' }}
             centered
             onCancel={() => {
               setShowModal(false);

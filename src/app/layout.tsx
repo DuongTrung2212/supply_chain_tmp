@@ -42,7 +42,7 @@ export default function RootLayout({ children }: Props) {
   // } catch (error) {
   //   console.log('Pusherrrrr', error);
   // }
-  // });  
+  // });
 
   //   return () => {
   //     pusher.unsubscribe('general-channel');

@@ -25,7 +25,6 @@ import useSWR, { mutate } from 'swr';
 import pusher from '@/services/pusher';
 import { closeMessage, openMessage } from '@/reducers/openMessageSilce';
 
-
 interface User {
   username: string;
   avatar: string;
@@ -76,9 +75,11 @@ interface Messenger {
 
 export default memo(function Footer() {
   const currentUser = useAppSelector((state) => state.user.user);
-  const currentReceive =  useAppSelector((state) => state.showMessage.currentReceiver)
+  const currentReceive = useAppSelector(
+    (state) => state.showMessage.currentReceiver
+  );
   const openMessageForm = useAppSelector((state) => state.showMessage.open);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const logged = useAppSelector((state) => state.user.logged);
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -111,7 +112,7 @@ export default memo(function Footer() {
         setDataMessage(res?.data?.data?.list_messenger || []);
       })
       .catch((err) => console.log(err));
-  }, [currentReceive.id])
+  }, [currentReceive.id]);
   useEffect(() => {
     if (!logged) setOpenMessageModal(false);
   }, [logged]);
@@ -119,7 +120,7 @@ export default memo(function Footer() {
   useEffect(() => {
     // if (!inforUser) return;
     fetchDataListMessage();
-  }, [fetchDataListMessage,changeMessage]);
+  }, [fetchDataListMessage, changeMessage]);
 
   useEffect(() => {
     const channel = pusher.subscribe('general-channel');
@@ -267,7 +268,13 @@ export default memo(function Footer() {
 
               setInforUser(item?.user?.user_id);
               // setOpenMessageModal(true);
-              dispatch(openMessage({id: item?.user.user_id, avatar: item?.user.avatar, username: item?.user.username}))
+              dispatch(
+                openMessage({
+                  id: item?.user.user_id,
+                  avatar: item?.user.avatar,
+                  username: item?.user.username,
+                })
+              );
               setOpenDrawer(false);
             }}
             key={index}
@@ -312,7 +319,7 @@ export default memo(function Footer() {
               className="cursor-pointer"
               onClick={() => {
                 setOpenMessageModal(false);
-                dispatch(closeMessage())
+                dispatch(closeMessage());
                 // setCurrentReceive({ avatar: '', name: '', id: '' });
                 // setInforUser('');
               }}
