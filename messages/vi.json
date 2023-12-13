@@ -6,7 +6,7 @@
     "route": {
       "/": "Trang chủ",
       "home": "Marketplace",
-      "about":"About Us"
+      "about":"Về chúng tôi"
     }
   },
   "action": {
