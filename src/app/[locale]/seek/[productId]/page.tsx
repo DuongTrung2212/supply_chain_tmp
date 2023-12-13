@@ -27,7 +27,7 @@ export default function SeekPage({
   useEffect(() => {
     const fetchOrigin = async () => {
       await instanceAxios
-        .get(`product/1517c730-38e0-4538-baa1-b5fef8ed9330/trace_origin`)
+        .get(`product/${params.productId}/trace_origin`)
         .then((res) => {
           console.log(res.data.data);
           setChain(res.data.data.chain || {});
@@ -37,7 +37,7 @@ export default function SeekPage({
         .catch((err) => console.log(err));
     };
     fetchOrigin();
-  }, []);
+  }, [params.productId]);
   return (
     !loadingPage && (
       <div className="w-full font-roboto pb-[50px] bg-[#121212] text-white">
@@ -176,7 +176,7 @@ export default function SeekPage({
             {growUp.map((item, index) => (
               <div
                 key={index}
-                className={`div1 w-[80%] relative border-2 p-[10px] ${
+                className={`div1 w-[80%] flex items-center rounded-xl relative border-2 p-[10px] ${
                   index !== 0 &&
                   `after:content-[''] after:absolute after:w-[2px] after:h-[calc(50%-10px)] after:top-0 after:right-0 after:translate-x-[2550%] after:bg-white`
                 } ${
@@ -187,10 +187,23 @@ export default function SeekPage({
                 <div
                   className={`absolute w-[20px] h-[20px] rounded-full border-2 top-1/2 right-0 -translate-y-1/2 translate-x-[300%]`}
                 />
-                <div className="w-1/2 max-h-[200px]">
-                  <Image alt="" src={item.image} />
+                <div className="w-1/2 h-full overflow-hidden">
+                  <Image
+                    width={'100%'}
+                    height={'100%'}
+                    className="object-cover rounded-xl"
+                    alt=""
+                    src={item.image}
+                  />
                 </div>
-                <p>{item.description}</p>
+                <div className="w-1/2 p-[10px]">
+                  <p className="mb-[10px]">
+                    {moment(item.created_at).format('DD/MM/YYYY')}
+                  </p>
+                  <p className="w-full break-words max-sm:text-[10px]">
+                    {item.description}
+                  </p>
+                </div>
               </div>
             ))}
             {/* <div
