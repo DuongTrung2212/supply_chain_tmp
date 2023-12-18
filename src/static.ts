@@ -19,12 +19,14 @@ import user_seed from '../public/cms/user_seed.png';
 import register_rule from '../public/register_rule.png';
 import noImage from '../public/profile.png';
 import profile from '../public/profile.svg';
-
-// import factory from '../public/cms/factory.png';
-// import factory from '../public/cms/factory.png';
-// import factory from '../public/cms/factory.png';
+import farmerBg from '../public/farmerBg.jpg';
+import factoryBg from '../public/factoryBg.jpg';
+import seedlingBg from '../public/seedlingBg.jpg';
 
 const staticVariables = {
+  seedlingBg,
+  factoryBg,
+  farmerBg,
   logo,
   logoRaiden,
   qc1,

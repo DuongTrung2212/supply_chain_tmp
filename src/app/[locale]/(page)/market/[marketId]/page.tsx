@@ -515,40 +515,44 @@ export default function MarketInfo({
                         },
                       }}
                     >
-                      <TooltipAntd title={'Xem QR'}>
-                        <Popover
-                          trigger={['click']}
-                          content={
-                            <div id="myqrcode">
-                              {/* <Image alt="" src={QRCode} /> */}
-                              <QRCodeAntd
-                                className="m-auto"
-                                value={`http://localhost:3000/seek/${dataProduct.id}`}
-                                bgColor="#fff"
-                                style={{ marginBottom: 16 }}
-                              />
-                              <div className="flex gap-x-5">
-                                <button
-                                  className="block bg-[#2081e1] text-white font-semibold m-auto border rounded-xl py-[5px] px-[10px]"
-                                  onClick={() => downloadQRCodeWithPadding(10)}
-                                >
-                                  Download
-                                </button>
-                                <button
-                                  className="block bg-[#2081e1] text-white font-semibold m-auto border rounded-xl py-[5px] px-[10px]"
-                                  onClick={() =>
-                                    downloadQRCodeWithPadding(10, true)
-                                  }
-                                >
-                                  Phóng to
-                                </button>
+                      {currentUser.id === dataProduct.user?.id && (
+                        <TooltipAntd title={'Xem QR'}>
+                          <Popover
+                            trigger={['click']}
+                            content={
+                              <div id="myqrcode">
+                                {/* <Image alt="" src={QRCode} /> */}
+                                <QRCodeAntd
+                                  className="m-auto"
+                                  value={`http://localhost:3000/seek/${dataProduct.id}`}
+                                  bgColor="#fff"
+                                  style={{ marginBottom: 16 }}
+                                />
+                                <div className="flex gap-x-5">
+                                  <button
+                                    className="block bg-[#2081e1] text-white font-semibold m-auto border rounded-xl py-[5px] px-[10px]"
+                                    onClick={() =>
+                                      downloadQRCodeWithPadding(10)
+                                    }
+                                  >
+                                    Download
+                                  </button>
+                                  <button
+                                    className="block bg-[#2081e1] text-white font-semibold m-auto border rounded-xl py-[5px] px-[10px]"
+                                    onClick={() =>
+                                      downloadQRCodeWithPadding(10, true)
+                                    }
+                                  >
+                                    Phóng to
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          }
-                        >
-                          <ShareAltOutlined />
-                        </Popover>
-                      </TooltipAntd>
+                            }
+                          >
+                            <ShareAltOutlined />
+                          </Popover>
+                        </TooltipAntd>
+                      )}
                     </ConfigProvider>
 
                     <EllipsisOutlined />
