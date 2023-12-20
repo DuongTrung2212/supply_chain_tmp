@@ -508,14 +508,14 @@ export default function MarketInfo({
                       style={{ color: '#005eff' }}
                     />
 
-                    <ConfigProvider
-                      theme={{
-                        token: {
-                          paddingSM: 10,
-                        },
-                      }}
-                    >
-                      {currentUser.id === dataProduct.user?.id && (
+                    {currentUser.id === dataProduct.user?.id && (
+                      <ConfigProvider
+                        theme={{
+                          token: {
+                            paddingSM: 10,
+                          },
+                        }}
+                      >
                         <TooltipAntd title={'Xem QR'}>
                           <Popover
                             trigger={['click']}
@@ -552,8 +552,8 @@ export default function MarketInfo({
                             <ShareAltOutlined />
                           </Popover>
                         </TooltipAntd>
-                      )}
-                    </ConfigProvider>
+                      </ConfigProvider>
+                    )}
 
                     <EllipsisOutlined />
                     {/* <FontAwesomeIcon icon={faFacebookMessenger} className='text-  ' /> */}

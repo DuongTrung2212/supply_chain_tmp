@@ -49,6 +49,8 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import MarketItem from '@/app/[locale]/home/components/MarketItem';
 import { useEffectOnce } from 'usehooks-ts';
+import { data } from '@/components/CMS/Statistical/Chart';
+import moment from 'moment';
 
 export default function UserInfo({ params }: { params: { id: string } }) {
   const [showCreateProductModal, setShowCreateProductModal] = useState(false);
@@ -87,14 +89,24 @@ export default function UserInfo({ params }: { params: { id: string } }) {
     fetchListProductByID();
   }, [fetchListProductByID]);
 
-  const contentStyle: React.CSSProperties = {
-    height: '300px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
-    borderRadius: '10px',
-  };
+  const overView = [
+    {
+      label: 'Tổng sản phẩm',
+      value: listProduct.length,
+    },
+    {
+      label: 'Tổng sản phẩm mở bán',
+      value: listProduct.filter((data) => data.is_sale).length,
+    },
+    {
+      label: 'Tổng sản phẩm đang đóng',
+      value: listProduct.filter((data) => !data.is_sale).length,
+    },
+    {
+      label: 'Vai trò',
+      value: dataUser.system_role,
+    },
+  ];
   const statisticItems = [
     {
       title: 'San pham',
@@ -175,12 +187,12 @@ export default function UserInfo({ params }: { params: { id: string } }) {
               },
             }}
           >
-            {[...Array(5)].map((_, index) => (
+            {overView.map((item, index) => (
               <Statistic
                 key={index}
                 valueStyle={{ fontWeight: 700 }}
-                title="Active Users"
-                value={112893}
+                title={item.label}
+                value={item.value}
               />
             ))}
           </ConfigProvider>

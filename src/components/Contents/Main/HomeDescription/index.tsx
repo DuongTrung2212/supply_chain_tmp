@@ -24,7 +24,7 @@ export default function HomeDescription({
     >
       <div className={`w-1/2`}>
         <p className={`text-5xl py-[20px]`}>{label}</p>
-        <p>{description}</p>
+        <div>{description}</div>
       </div>
       <Image
         width={400}
