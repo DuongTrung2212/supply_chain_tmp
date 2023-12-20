@@ -120,7 +120,19 @@ export default memo(function ManageUser() {
           {
             title: 'Role yêu cầu',
             // dataIn   dex: '',
-            render: (value, record, index) => record.survey_data?.user_role,
+            render: (value, record, index) => (
+              <Popover
+                content={
+                  <div className="max-w-[400px] text-wrap">
+                    <p className="max-w-[400px] p-[20px] ">
+                      {JSON.stringify(record.survey_data, null, 2)}
+                    </p>
+                  </div>
+                }
+              >
+                <p>{record.survey_data?.user_role}</p>
+              </Popover>
+            ),
           },
         ]
       : [
