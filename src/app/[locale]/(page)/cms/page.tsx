@@ -60,7 +60,8 @@ export default memo(function CMSPage() {
       getItem(<p>Đổi mật khẩu</p>, '3'),
       getItem(<p>Nạp tiền</p>, '4'),
     ]),
-    currentUser.user.system_role !== 'ADMIN'
+    currentUser.user.system_role !== 'ADMIN' &&
+    currentUser.user.system_role !== 'MEMBER'
       ? getItem('Sản phẩm', 'sub2', <TeamOutlined />, [
           getItem(<p>Quản lí sản phâm</p>, '5'),
           getItem(<p>Lịch sử giao dịch</p>, '6'),
